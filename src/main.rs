@@ -1,3 +1,5 @@
+#![recursion_limit = "200"]
+
 #[macro_use]
 extern crate pest;
 
@@ -18,8 +20,18 @@ impl_rdp! {
             clause_where?
         }
 
-        // TODO: expr
-        expr = { lit_integer }
+        expr = {
+            lit_integer |
+            expr_add |
+            expr_subt |
+            expr_mult |
+            expr_div
+        }
+
+        expr_add = { expr ~ tok_plus ~ expr }
+        expr_subt = { expr ~ tok_minus ~ expr }
+        expr_mult = { expr ~ tok_star ~ expr }
+        expr_div = { expr ~ tok_slash_forward ~ expr }
 
         lit_integer = @{ ['0'..'9']+ }
 
@@ -30,11 +42,40 @@ impl_rdp! {
             ["_"]
         )+ }
 
+        tok_plus = { ["+"] }
+        tok_minus = { ["-"] }
+        tok_ampersand = { ["&"] }
+        tok_percent = { ["%"] }
+        tok_pipe = { ["|"] }
+        tok_caret = { ["^"] }
         tok_star = { ["*"] }
-        tok_eq = { ["="] }
-        // tok_eq_eq = { tok_eq ~ tok_eq } // TODO: This is valid somewhere, where?
+        tok_slash_forward = { ["/"] }
         tok_paren_open = { ["("] }
         tok_paren_close = { [")"] }
+
+        tok_eq = @{ ["="] }
+        // tok_eq_eq = { tok_eq ~ tok_eq } // TODO: This is valid somewhere, where?
+        tok_bang = @{ ["!"] }
+        tok_angle_open = @{ ["<"] }
+        tok_angle_close = @{ [">"] }
+
+        op_cmp = {
+            op_cmp_eq |
+            // op_cmp_eq_eq |
+            op_cmp_neq_bang |
+            op_cmp_lt |
+            op_cmp_gt |
+            op_cmp_lt_eq |
+            op_cmp_gt_eq
+        }
+
+        op_cmp_eq = { tok_eq }
+        // op_cmp_eq_eq = { tok_eq ~ tok_eq }
+        op_cmp_neq_bang = { tok_bang ~ tok_eq }
+        op_cmp_lt = { tok_angle_open }
+        op_cmp_gt = { tok_angle_close }
+        op_cmp_lt_eq = { tok_angle_open ~ tok_eq }
+        op_cmp_gt_eq = { tok_angle_close ~ tok_eq }
 
         kw_select = { [i"SELECT"] }
         kw_top = { [i"TOP"] }
@@ -47,7 +88,7 @@ impl_rdp! {
         kw_and = { [i"AND"] }
         kw_not = { [i"NOT"] }
 
-        pred_cmp = { expr ~ tok_eq ~ expr }
+        pred_cmp = { expr ~ op_cmp ~ expr }
 
         clause_where = { kw_where ~ pred_cmp }
 
@@ -59,7 +100,11 @@ fn main() {
     // TODO: Obviously you never want to compare constants.
     //       So pred_cmp needs to take in idents which means expr needs to
     //       grow to accept more than lit_integer.
-    let mut parser = Rdp::new(StringInput::new("SELECT * FROM MyTable WHERE 5 = 5"));
+    let mut parser = Rdp::new(StringInput::new("SELECT * FROM MyTable WHERE 4 < 5"));
+
+    // TODO: This needs to be possible.
+    //       `(SELECT TOP 1 Id FROM MyOtherTable)` needs to become a lhs expr
+    //let mut parser = Rdp::new(StringInput::new("SELECT * FROM MyTable WHERE (SELECT TOP 1 Id FROM MyOtherTable) < 74"));
 
     if parser.tsql() {
         println!("{:#?}", parser.queue());
