@@ -15,11 +15,10 @@ impl_rdp! {
         stmt_top = { kw_top ~ tok_paren_open ~ lit_integer ~ tok_paren_close ~ kw_percent? ~ kw_with_ties? }
 
         stmt_select = {
-            kw_select ~
-            (stmt_top | stmt_top_legacy)? ~
-            column_name_list ~
-            kw_from ~ term_id ~
-            clause_where?
+            kw_select
+            ~ (stmt_top | stmt_top_legacy)?
+            ~ column_name_list ~ kw_from ~ term_id
+            ~ clause_where?
         }
 
         expr = {
