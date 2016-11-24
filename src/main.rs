@@ -12,10 +12,12 @@ impl_rdp! {
         ) ~ eoi }
 
         stmt_top_legacy = { kw_top ~ lit_integer ~ kw_percent? }
-        stmt_top = { kw_top ~ tok_paren_open ~ expr ~ tok_paren_close ~  kw_percent? ~ kw_with_ties? }
+        stmt_top = { kw_top ~ tok_paren_open ~ lit_integer ~ tok_paren_close ~ kw_percent? ~ kw_with_ties? }
 
-        stmt_select = { kw_select ~
-            (tok_star | (stmt_top | stmt_top_legacy)) ~
+        stmt_select = {
+            kw_select ~
+            (stmt_top | stmt_top_legacy)? ~
+            column_name_list ~
             kw_from ~ term_id ~
             clause_where?
         }
@@ -91,6 +93,9 @@ impl_rdp! {
         pred_cmp = { expr ~ op_cmp ~ expr }
 
         clause_where = { kw_where ~ pred_cmp }
+
+        // TODO: column_name_list
+        column_name_list = { tok_star }
 
         whitespace = _{ [" "] | ["\t"] | ["\r"] | ["\n"] }
     }
