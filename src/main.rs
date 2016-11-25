@@ -5,14 +5,16 @@ extern crate pest;
 
 use pest::prelude::*;
 
+mod ast;
+
 impl_rdp! {
     grammar! {
-        tsql = { (
+        tsql = _{ (
             stmt_select
         ) ~ eoi }
 
-        stmt_top_legacy = { kw_top ~ lit_integer ~ kw_percent? }
-        stmt_top = { kw_top ~ tok_paren_open ~ lit_integer ~ tok_paren_close ~ kw_percent? ~ kw_with_ties? }
+        stmt_top_legacy = { kw_top ~ expr ~ kw_percent? }
+        stmt_top = { kw_top ~ tok_paren_open ~ expr ~ tok_paren_close ~ kw_percent? ~ kw_with_ties? }
 
         stmt_select = {
             kw_select
@@ -22,11 +24,11 @@ impl_rdp! {
         }
 
         expr = {
-            lit_integer |
-            expr_add |
-            expr_subt |
-            expr_mult |
-            expr_div
+            lit_integer
+            | expr_add
+            | expr_subt
+            | expr_mult
+            | expr_div
         }
 
         expr_add = { expr ~ tok_plus ~ expr }
@@ -34,7 +36,13 @@ impl_rdp! {
         expr_mult = { expr ~ tok_star ~ expr }
         expr_div = { expr ~ tok_slash_forward ~ expr }
 
+        lit_bool = { [i"TRUE"] | [i"FALSE"] }
         lit_integer = @{ ['0'..'9']+ }
+
+        literal = {
+            lit_bool
+            | lit_integer
+        }
 
         term_id = @{ (
             ['a'..'z'] |
@@ -55,23 +63,23 @@ impl_rdp! {
         tok_paren_close = { [")"] }
 
         tok_eq = @{ ["="] }
-        // tok_eq_eq = { tok_eq ~ tok_eq } // TODO: This is valid somewhere, where?
+//  tok_eq_eq = { tok_eq ~ tok_eq } // TODO: This is valid somewhere, where?
         tok_bang = @{ ["!"] }
         tok_angle_open = @{ ["<"] }
         tok_angle_close = @{ [">"] }
 
         op_cmp = {
-            op_cmp_eq |
-            // op_cmp_eq_eq |
-            op_cmp_neq_bang |
-            op_cmp_lt |
-            op_cmp_gt |
-            op_cmp_lt_eq |
-            op_cmp_gt_eq
+            op_cmp_eq
+//  | op_cmp_eq_eq
+            | op_cmp_neq_bang
+            | op_cmp_lt
+            | op_cmp_gt
+            | op_cmp_lt_eq
+            | op_cmp_gt_eq
         }
 
         op_cmp_eq = { tok_eq }
-        // op_cmp_eq_eq = { tok_eq ~ tok_eq }
+// op_cmp_eq_eq = { tok_eq ~ tok_eq }
         op_cmp_neq_bang = { tok_bang ~ tok_eq }
         op_cmp_lt = { tok_angle_open }
         op_cmp_gt = { tok_angle_close }
@@ -93,10 +101,71 @@ impl_rdp! {
 
         clause_where = { kw_where ~ pred_cmp }
 
-        // TODO: column_name_list
         column_name_list = { tok_star }
 
         whitespace = _{ [" "] | ["\t"] | ["\r"] | ["\n"] }
+    }
+
+    process! {
+        parse_stmt_top(&self) -> ast::Node<ast::TopStatement> {
+            (pos: stmt_top_legacy
+            ,_: kw_top
+            ,expr: parse_expression()) => ast::Node {
+                pos: ast::Position::from(self.input().line_col(pos.start)),
+                node: ast::TopStatement {
+                    expr: expr,
+                    is_legacy: true,
+                }
+            },
+
+            (pos: stmt_top
+            ,_: kw_top
+            ,_: tok_paren_open
+            ,expr: parse_expression()
+            ,_: tok_paren_close) => ast::Node {
+                pos: ast::Position::from(self.input().line_col(pos.start)),
+                node: ast::TopStatement {
+                    expr: expr,
+                    is_legacy: false,
+                }
+            },
+        } // parse_stmt_top
+
+        parse_expression(&self) -> ast::Node<ast::Expression> {
+            (pos: expr, lit: parse_literal()) => ast::Node {
+                pos: ast::Position::from(self.input().line_col(pos.start)),
+                node: ast::Expression::Literal {
+                    lit: lit
+                }
+            }
+        }
+
+        parse_literal(&self) -> ast::Literal {
+            (&v: lit_integer) => ast::Literal::Int(v.parse().unwrap()),
+            (&v: lit_bool) => ast::Literal::Bool(v.parse().unwrap()),
+        }
+
+        parse_stmt_select(&self) -> ast::Node<ast::SelectStatement> {
+            (pos: stmt_select
+            ,_: kw_select
+            ,stmt_top: parse_stmt_top()
+            ) => ast::Node {
+                pos: ast::Position::from(self.input().line_col(pos.start)),
+                node: ast::SelectStatement {
+                    top_statement: Some(stmt_top.node),
+                    column_name_list: vec![],
+                }
+            },
+            (pos: stmt_select
+            ,_: kw_select
+            ) => ast::Node {
+                pos: ast::Position::from(self.input().line_col(pos.start)),
+                node: ast::SelectStatement {
+                    top_statement: None,
+                    column_name_list: vec![],
+                }
+            },
+        } // parse_stmt_select
     }
 }
 
@@ -104,14 +173,16 @@ fn main() {
     // TODO: Obviously you never want to compare constants.
     //       So pred_cmp needs to take in idents which means expr needs to
     //       grow to accept more than lit_integer.
-    let mut parser = Rdp::new(StringInput::new("SELECT * FROM MyTable WHERE 4 < 5"));
+    let mut parser = Rdp::new(StringInput::new("SELECT TOP (10) * FROM MyTable"));
 
     // TODO: This needs to be possible.
     //       `(SELECT TOP 1 Id FROM MyOtherTable)` needs to become a lhs expr
-    //let mut parser = Rdp::new(StringInput::new("SELECT * FROM MyTable WHERE (SELECT TOP 1 Id FROM MyOtherTable) < 74"));
+    // let mut parser = Rdp::new(StringInput::new("SELECT * FROM MyTable WHERE (SELECT TOP 1 Id FROM MyOtherTable) < 74"));
 
     if parser.tsql() {
         println!("{:#?}", parser.queue());
+        let stmt = parser.parse_stmt_select();
+        println!("{:#?}", stmt);
     } else {
         println!("Failed to parse tsql!");
         println!("Expected: {:?}", parser.expected());
