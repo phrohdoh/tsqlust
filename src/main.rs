@@ -13,7 +13,7 @@ impl_rdp! {
             stmt_select
         ) ~ eoi }
 
-        stmt_top_legacy = { kw_top ~ expr ~ kw_percent? }
+        stmt_top_legacy = { kw_top ~ lit_integer ~ kw_percent? }
         stmt_top = { kw_top ~ tok_paren_open ~ expr ~ tok_paren_close ~ kw_percent? ~ kw_with_ties? }
 
         stmt_select = {
@@ -108,16 +108,6 @@ impl_rdp! {
 
     process! {
         parse_stmt_top(&self) -> ast::Node<ast::TopStatement> {
-            (pos: stmt_top_legacy
-            ,_: kw_top
-            ,expr: parse_expression()) => ast::Node {
-                pos: ast::Position::from(self.input().line_col(pos.start)),
-                node: ast::TopStatement {
-                    expr: expr,
-                    is_legacy: true,
-                }
-            },
-
             (pos: stmt_top
             ,_: kw_top
             ,_: tok_paren_open
@@ -129,9 +119,28 @@ impl_rdp! {
                     is_legacy: false,
                 }
             },
+            (pos: stmt_top_legacy
+            ,_: kw_top
+            ,expr: parse_expression()) => ast::Node {
+                pos: ast::Position::from(self.input().line_col(pos.start)),
+                node: ast::TopStatement {
+                    expr: expr,
+                    is_legacy: true,
+                }
+            },
         } // parse_stmt_top
 
         parse_expression(&self) -> ast::Node<ast::Expression> {
+            (v: lit_integer) => {
+                let lit_str = self.input().slice(v.start, v.end);
+
+                ast::Node {
+                    pos: ast::Position::from(self.input().line_col(v.start)),
+                    node: ast::Expression::Literal {
+                        lit: ast::Literal::Int(lit_str.parse().unwrap()),
+                    }
+                }
+            },
             (pos: expr, lit: parse_literal()) => ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
                 node: ast::Expression::Literal {
@@ -173,7 +182,7 @@ fn main() {
     // TODO: Obviously you never want to compare constants.
     //       So pred_cmp needs to take in idents which means expr needs to
     //       grow to accept more than lit_integer.
-    let mut parser = Rdp::new(StringInput::new("SELECT TOP (10) * FROM MyTable"));
+    let mut parser = Rdp::new(StringInput::new("SELECT TOP 10 * FROM MyTable"));
 
     // TODO: This needs to be possible.
     //       `(SELECT TOP 1 Id FROM MyOtherTable)` needs to become a lhs expr
@@ -186,5 +195,27 @@ fn main() {
     } else {
         println!("Failed to parse tsql!");
         println!("Expected: {:?}", parser.expected());
+    }
+}
+
+mod tests {
+    use super::*;
+
+    #[test]
+    fn select_top_10_star_from_mytable() {
+        let mut parser = Rdp::new(StringInput::new("SELECT TOP (10) * FROM MyTable"));
+        assert!(parser.tsql());
+
+        let stmt_select = parser.parse_stmt_select().node;
+        assert!(stmt_select.top_statement.is_some());
+    }
+
+    #[test]
+    fn select_top_legacy_10_star_from_mytable() {
+        let mut parser = Rdp::new(StringInput::new("SELECT TOP 10 * FROM MyTable"));
+        assert!(parser.tsql());
+
+        let stmt_select = parser.parse_stmt_select().node;
+        assert!(stmt_select.top_statement.is_some());
     }
 }
