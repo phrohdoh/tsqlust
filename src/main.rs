@@ -7,6 +7,7 @@ use pest::{StringInput, Parser};
 use pest::prelude::{Token, Input};
 
 mod ast;
+mod visitor;
 
 impl_rdp! {
     grammar! {
