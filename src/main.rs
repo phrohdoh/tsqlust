@@ -107,27 +107,28 @@ impl_rdp! {
     }
 
     process! {
-        parse_stmt_top(&self) -> ast::Node<ast::TopStatement> {
+        parse_stmt_top(&self) -> Option<ast::Node<ast::TopStatement>> {
             (pos: stmt_top
             ,_: kw_top
             ,_: tok_paren_open
             ,expr: parse_expression()
-            ,_: tok_paren_close) => ast::Node {
+            ,_: tok_paren_close) => Some(ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
                 value: ast::TopStatement {
                     expr: expr,
                     is_legacy: false,
                 }
-            },
+            }),
             (pos: stmt_top_legacy
             ,_: kw_top
-            ,expr: parse_expression()) => ast::Node {
+            ,expr: parse_expression()) => Some(ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
                 value: ast::TopStatement {
                     expr: expr,
                     is_legacy: true,
                 }
-            },
+            }),
+            () => None,
         } // parse_stmt_top
 
         parse_expression(&self) -> ast::Node<ast::Expression> {
@@ -161,16 +162,7 @@ impl_rdp! {
             ) => ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
                 value: ast::SelectStatement {
-                    top_statement: Some(stmt_top),
-                    column_name_list: vec![],
-                }
-            },
-            (pos: stmt_select
-            ,_: kw_select
-            ) => ast::Node {
-                pos: ast::Position::from(self.input().line_col(pos.start)),
-                value: ast::SelectStatement {
-                    top_statement: None,
+                    top_statement: stmt_top,
                     column_name_list: vec![],
                 }
             },
@@ -202,6 +194,9 @@ mod tests {
     #[allow(unused_imports)]
     use super::{Rdp, StringInput, ast};
 
+    #[allow(unused_imports)]
+    use pest::Parser;
+
     #[test]
     fn select_top_10_star_from_mytable() {
         let mut parser = Rdp::new(StringInput::new("SELECT TOP (10) * FROM MyTable"));
@@ -210,10 +205,7 @@ mod tests {
         let select = parser.parse_stmt_select();
         assert_eq!(select.pos.to_pair(), (1, 1));
 
-        let select_value = select.value;
-        assert!(select_value.top_statement.is_some());
-
-        let top = select_value.top_statement.unwrap();
+        let top = select.value.top_statement.unwrap();
         assert_eq!(top.pos.to_pair(), (1, 8));
 
         let top_value = top.value;
@@ -231,5 +223,17 @@ mod tests {
 
         let stmt_select = parser.parse_stmt_select().value;
         assert!(stmt_select.top_statement.is_some());
+    }
+
+    #[test]
+    fn top_972() {
+        let mut parser = Rdp::new(StringInput::new("TOP (972)"));
+        assert!(parser.stmt_top());
+
+        let stmt_top = parser.parse_stmt_top().unwrap().value;
+        assert!(!stmt_top.is_legacy);
+
+        assert_eq!(stmt_top.expr.value,
+                   ast::Expression::Literal { lit: ast::Literal::Int(972) });
     }
 }
