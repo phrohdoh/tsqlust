@@ -114,7 +114,7 @@ impl_rdp! {
             ,expr: parse_expression()
             ,_: tok_paren_close) => ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
-                node: ast::TopStatement {
+                value: ast::TopStatement {
                     expr: expr,
                     is_legacy: false,
                 }
@@ -123,7 +123,7 @@ impl_rdp! {
             ,_: kw_top
             ,expr: parse_expression()) => ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
-                node: ast::TopStatement {
+                value: ast::TopStatement {
                     expr: expr,
                     is_legacy: true,
                 }
@@ -136,14 +136,14 @@ impl_rdp! {
 
                 ast::Node {
                     pos: ast::Position::from(self.input().line_col(v.start)),
-                    node: ast::Expression::Literal {
+                    value: ast::Expression::Literal {
                         lit: ast::Literal::Int(lit_str.parse().unwrap()),
                     }
                 }
             },
             (pos: expr, lit: parse_literal()) => ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
-                node: ast::Expression::Literal {
+                value: ast::Expression::Literal {
                     lit: lit
                 }
             }
@@ -160,8 +160,8 @@ impl_rdp! {
             ,stmt_top: parse_stmt_top()
             ) => ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
-                node: ast::SelectStatement {
-                    top_statement: Some(stmt_top.node),
+                value: ast::SelectStatement {
+                    top_statement: Some(stmt_top),
                     column_name_list: vec![],
                 }
             },
@@ -169,7 +169,7 @@ impl_rdp! {
             ,_: kw_select
             ) => ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
-                node: ast::SelectStatement {
+                value: ast::SelectStatement {
                     top_statement: None,
                     column_name_list: vec![],
                 }
@@ -206,8 +206,21 @@ mod tests {
         let mut parser = Rdp::new(StringInput::new("SELECT TOP (10) * FROM MyTable"));
         assert!(parser.tsql());
 
-        let stmt_select = parser.parse_stmt_select().node;
-        assert!(stmt_select.top_statement.is_some());
+        let select = parser.parse_stmt_select();
+        assert_eq!(select.pos.to_pair(), (1, 1));
+
+        let select_value = select.value;
+        assert!(select_value.top_statement.is_some());
+
+        let top = select_value.top_statement.unwrap();
+        assert_eq!(top.pos.to_pair(), (1, 8));
+
+        let top_value = top.value;
+        assert!(!top_value.is_legacy);
+
+        let top_expr_value = top_value.expr.value;
+        assert_eq!(top_expr_value,
+                   ast::Expression::Literal { lit: ast::Literal::Int(10) });
     }
 
     #[test]
@@ -215,7 +228,7 @@ mod tests {
         let mut parser = Rdp::new(StringInput::new("SELECT TOP 10 * FROM MyTable"));
         assert!(parser.tsql());
 
-        let stmt_select = parser.parse_stmt_select().node;
+        let stmt_select = parser.parse_stmt_select().value;
         assert!(stmt_select.top_statement.is_some());
     }
 }

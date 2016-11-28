@@ -27,13 +27,13 @@ impl From<(usize, usize)> for Position {
 
 #[derive(Debug)]
 pub struct Node<TNode> {
-    pub pos: Position,
-    pub node: TNode,
+    pub pos: self::Position,
+    pub value: TNode,
 }
 
 #[derive(Debug)]
 pub struct SelectStatement {
-    pub top_statement: Option<TopStatement>,
+    pub top_statement: Option<self::Node<self::TopStatement>>,
     pub column_name_list: Vec<String>,
 }
 
@@ -61,6 +61,6 @@ pub enum Expression {
 
 #[derive(Debug)]
 pub struct TopStatement {
-    pub expr: Node<Expression>,
+    pub expr: Node<self::Expression>,
     pub is_legacy: bool,
 }
