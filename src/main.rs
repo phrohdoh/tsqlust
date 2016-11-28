@@ -199,7 +199,8 @@ fn main() {
 }
 
 mod tests {
-    use super::*;
+    #[allow(unused_imports)]
+    use super::{Rdp, StringInput, ast};
 
     #[test]
     fn select_top_10_star_from_mytable() {
