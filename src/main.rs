@@ -3,7 +3,8 @@
 #[macro_use]
 extern crate pest;
 
-use pest::prelude::*;
+use pest::{StringInput, Parser};
+use pest::prelude::{Token, Input};
 
 mod ast;
 
