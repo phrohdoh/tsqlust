@@ -1,7 +1,14 @@
 use ast;
 
 #[derive(Debug, PartialEq)]
-pub enum Diagnostic {
+pub struct Diagnostic {
+    pub diagnostic_type: DiagnosticType,
+    pub pos: ast::Position,
+    pub message: String,
+}
+
+#[derive(Debug, PartialEq)]
+pub enum DiagnosticType {
     Warning,
     Error,
 }
@@ -13,7 +20,7 @@ pub trait Visitor {
 
 #[cfg(test)]
 mod tests {
-    use super::{Visitor, Diagnostic};
+    use super::{Visitor, Diagnostic, DiagnosticType};
     use super::super::*;
     use ast::{SelectStatement, TopStatement};
 
@@ -28,8 +35,11 @@ mod tests {
             match s.expr.value {
                 ast::Expression::Literal { lit: ast::Literal::Int(v) } => {
                     if v <= 0 {
-                        // TODO: Add an explanation
-                        return Some(Diagnostic::Warning);
+                        return Some(Diagnostic {
+                            diagnostic_type: DiagnosticType::Warning,
+                            pos: s.expr.pos,
+                            message: "A value <= 0 will yield an empty recordset".into(),
+                        });
                     }
                 }
                 _ => {}
@@ -46,8 +56,8 @@ mod tests {
 
         let mut vis = TestVisitor {};
         let stmt_top = parser.parse_stmt_top().unwrap().value;
-        let diagnostic_opt = vis.visit_top_statement(&stmt_top);
+        let diagnostic = vis.visit_top_statement(&stmt_top).unwrap();
 
-        assert_eq!(diagnostic_opt, Some(Diagnostic::Warning));
+        assert_eq!(diagnostic.pos.to_pair(), (1, 6));
     }
 }
