@@ -8,6 +8,7 @@ use pest::prelude::{Token, Input};
 
 mod ast;
 mod visitor;
+mod diagnostics;
 
 impl_rdp! {
     grammar! {
