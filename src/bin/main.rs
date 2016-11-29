@@ -37,11 +37,14 @@ fn main() {
             let mut vis = ExampleVisitor {};
             let diagnostics = get_diagnostics_for(&query_string, &mut vis);
             for diag in diagnostics {
-                println!("{:?}: {}", diag.pos.to_pair(), diag.message);
+                println!("(line: {}, col: {}) -> {}",
+                         diag.pos.line,
+                         diag.pos.col,
+                         diag.message);
             }
         }
         _ => {
-            println!("Please provide a filepath to a T-SQL query");
+            println!("Please provide a path to a file containing a T-SQL query");
         }
     }
 }
