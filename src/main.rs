@@ -111,21 +111,23 @@ impl_rdp! {
     process! {
         parse_stmt_top(&self) -> Option<ast::Node<ast::TopStatement>> {
             (pos: stmt_top
-            ,_: kw_top
+            ,kw: kw_top
             ,_: tok_paren_open
             ,expr: parse_expression()
             ,_: tok_paren_close) => Some(ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
                 value: ast::TopStatement {
+                    top_keyword_pos: ast::Position::from(self.input().line_col(kw.start)),
                     expr: expr,
                     is_legacy: false,
                 }
             }),
             (pos: stmt_top_legacy
-            ,_: kw_top
+            ,kw: kw_top
             ,expr: parse_expression()) => Some(ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
                 value: ast::TopStatement {
+                    top_keyword_pos: ast::Position::from(self.input().line_col(kw.start)),
                     expr: expr,
                     is_legacy: true,
                 }

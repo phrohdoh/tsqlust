@@ -40,7 +40,7 @@ mod tests {
             if top_statement.is_legacy {
                 return Some(Diagnostic {
                     diagnostic_type: DiagnosticType::Error,
-                    pos: top_statement.expr.pos, // TODO: This needs to be the pos of the kw_top
+                    pos: top_statement.top_keyword_pos,
                     message: "A legacy TOP statement is simply not allowed! Add parentheses."
                         .into(),
                 });
@@ -85,7 +85,7 @@ mod tests {
         let stmt_top = parser.parse_stmt_top().unwrap().value;
         let diagnostic = vis.visit_top_statement(&stmt_top).unwrap();
 
-        assert_eq!(diagnostic.pos.to_pair(), (1, 5));
+        assert_eq!(diagnostic.pos.to_pair(), (1, 1));
         assert_eq!(diagnostic.diagnostic_type, DiagnosticType::Error);
     }
 }

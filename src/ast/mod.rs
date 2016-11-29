@@ -61,6 +61,8 @@ pub enum Expression {
 
 #[derive(Debug)]
 pub struct TopStatement {
+    // TODO: Store this as a Token / Keyword / something other than just a Position
+    pub top_keyword_pos: self::Position,
     pub expr: Node<self::Expression>,
     pub is_legacy: bool,
 }
