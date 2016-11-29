@@ -68,11 +68,11 @@ impl_rdp! {
         tok_paren_open = { ["("] }
         tok_paren_close = { [")"] }
 
-        tok_eq = @{ ["="] }
-//  tok_eq_eq = { tok_eq ~ tok_eq } // TODO: This is valid somewhere, where?
-        tok_bang = @{ ["!"] }
-        tok_angle_open = @{ ["<"] }
-        tok_angle_close = @{ [">"] }
+        tok_eq = { ["="] }
+//  tok_eq_eq = @{ tok_eq ~ tok_eq } // TODO: This is valid somewhere, where?
+        tok_bang = { ["!"] }
+        tok_angle_open = { ["<"] }
+        tok_angle_close = { [">"] }
 
         op_cmp = {
             op_cmp_eq
@@ -85,12 +85,12 @@ impl_rdp! {
         }
 
         op_cmp_eq = { tok_eq }
-// op_cmp_eq_eq = { tok_eq ~ tok_eq }
-        op_cmp_neq_bang = { tok_bang ~ tok_eq }
+// op_cmp_eq_eq = @{ tok_eq ~ tok_eq }
+        op_cmp_neq_bang = @{ tok_bang ~ tok_eq }
         op_cmp_lt = { tok_angle_open }
         op_cmp_gt = { tok_angle_close }
-        op_cmp_lt_eq = { tok_angle_open ~ tok_eq }
-        op_cmp_gt_eq = { tok_angle_close ~ tok_eq }
+        op_cmp_lt_eq = @{ tok_angle_open ~ tok_eq }
+        op_cmp_gt_eq = @{ tok_angle_close ~ tok_eq }
 
         kw_select = { [i"SELECT"] }
         kw_top = { [i"TOP"] }
