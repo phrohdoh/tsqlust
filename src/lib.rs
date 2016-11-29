@@ -68,6 +68,8 @@ impl_rdp! {
         tok_paren_open = { ["("] }
         tok_paren_close = { [")"] }
 
+        tok_comma = { [","] }
+
         tok_eq = { ["="] }
 //  tok_eq_eq = @{ tok_eq ~ tok_eq } // TODO: This is valid somewhere, where?
         tok_bang = { ["!"] }
@@ -107,7 +109,10 @@ impl_rdp! {
 
         clause_where = { kw_where ~ pred_cmp }
 
-        column_name_list = { tok_star }
+        column_name_list = {
+            tok_star
+            | term_id ~ (tok_comma ~ term_id)*
+        }
 
         whitespace = _{ [" "] | ["\t"] | ["\r"] | ["\n"] }
     }
@@ -139,6 +144,22 @@ impl_rdp! {
             () => None,
         } // parse_stmt_top
 
+        parse_column_name_list(&self) -> ast::Node<ast::ColumnNameList> {
+            (columns: column_name_list) => {
+                let col_str = self.input().slice(columns.start, columns.end);
+                ast::Node {
+                    pos: ast::Position::from(self.input().line_col(columns.start)),
+                    value: ast::ColumnNameList {
+// TODO:
+//   * We probably don't want to trim
+//   * column_names should be a Vec<Node<Identifier>>
+//     where Identifier = { value: String, leading_space: String }
+                        column_names: col_str.split(",").map(|t| t.trim().to_owned()).collect(),
+                    }
+                }
+            }
+        }
+
         parse_expression(&self) -> ast::Node<ast::Expression> {
             (v: lit_integer) => {
                 let lit_str = self.input().slice(v.start, v.end);
@@ -167,11 +188,12 @@ impl_rdp! {
             (pos: stmt_select
             ,_: kw_select
             ,stmt_top: parse_stmt_top()
+            ,columns: parse_column_name_list()
             ) => ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
                 value: ast::SelectStatement {
                     top_statement: stmt_top,
-                    column_name_list: vec![],
+                    column_name_list: columns,
                 }
             },
         } // parse_stmt_select
@@ -204,14 +226,36 @@ mod tests {
     use pest::Parser;
 
     #[test]
+    fn column_name_list_star() {
+        let mut parser = Rdp::new(StringInput::new("*"));
+        assert!(parser.column_name_list());
+
+        let columns = parser.parse_column_name_list().value;
+        assert!(columns.is_star());
+    }
+
+    #[test]
+    fn column_name_list_term_ids() {
+        let mut parser = Rdp::new(StringInput::new("Id,SomeColumn,ColumnA,  ColumnB,  Foo  ,Qux"));
+        assert!(parser.column_name_list());
+
+        let columns = parser.parse_column_name_list().value.column_names;
+        assert_eq!(columns,
+                   vec!["Id", "SomeColumn", "ColumnA", "ColumnB", "Foo", "Qux"]);
+    }
+
+    #[test]
     fn select_top_10_star_from_mytable() {
         let mut parser = Rdp::new(StringInput::new("SELECT TOP (10) * FROM MyTable"));
         assert!(parser.tsql());
 
-        let select = parser.parse_stmt_select();
-        assert_eq!(select.pos.to_pair(), (1, 1));
+        let stmt_select = parser.parse_stmt_select();
+        assert_eq!(stmt_select.pos.to_pair(), (1, 1));
 
-        let top = select.value.top_statement.unwrap();
+        let select_value = stmt_select.value;
+        assert!(select_value.is_star());
+
+        let top = select_value.top_statement.unwrap();
         assert_eq!(top.pos.to_pair(), (1, 8));
 
         let top_value = top.value;
@@ -229,6 +273,7 @@ mod tests {
 
         let stmt_select = parser.parse_stmt_select().value;
         assert!(stmt_select.top_statement.is_some());
+        assert!(stmt_select.is_star());
     }
 
     #[test]

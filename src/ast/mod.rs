@@ -37,13 +37,12 @@ pub struct Node<TNode> {
 #[derive(Debug)]
 pub struct SelectStatement {
     pub top_statement: Option<Node<TopStatement>>,
-    pub column_name_list: Vec<String>,
+    pub column_name_list: Node<ColumnNameList>,
 }
 
 impl SelectStatement {
     pub fn is_star(&self) -> bool {
-        unimplemented!()
-        // self.column_name_list.len() == 1 && self.column_name_list[0] == "*"
+        self.column_name_list.value.is_star()
     }
 }
 
@@ -68,4 +67,19 @@ pub struct TopStatement {
     pub top_keyword_pos: Position,
     pub expr: Node<Expression>,
     pub is_legacy: bool,
+}
+
+#[derive(Debug)]
+pub struct ColumnNameList {
+    pub column_names: Vec<String>,
+}
+
+impl ColumnNameList {
+    pub fn is_star(&self) -> bool {
+        if let Some(name) = self.column_names.get(0) {
+            name == "*"
+        } else {
+            false
+        }
+    }
 }
