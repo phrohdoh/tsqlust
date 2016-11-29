@@ -28,16 +28,13 @@ fn main() {
     match env::args().nth(1) {
         Some(file_path) => {
             let mut query_string = String::new();
-
             let mut file = File::open(file_path).expect("Could not find file!");
-            file.read_to_string(&mut query_string);
-
-            println!("{:?}", query_string);
+            let _ = file.read_to_string(&mut query_string);
 
             let mut vis = ExampleVisitor {};
             let diagnostics = get_diagnostics_for(&query_string, &mut vis);
             for diag in diagnostics {
-                println!("{}", diag.message);
+                println!("{:?}: {}", diag.pos.to_pair(), diag.message);
             }
         }
         _ => {
