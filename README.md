@@ -1,6 +1,6 @@
 # `tsqlust`
 
-### A T-SQL lexer/parser/static-analysis foundation
+### A T-SQL lexer/parser/static-analysis framework
 
 ## LICENSE
 
