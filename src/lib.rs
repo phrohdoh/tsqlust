@@ -1,3 +1,6 @@
+// tsqlust -- GPLv3 T-SQL static analysis framework
+// Copyright (C) 2016 Taryn Hill
+
 #![recursion_limit = "100"]
 
 #[macro_use]

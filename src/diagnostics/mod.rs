@@ -1,3 +1,6 @@
+// tsqlust -- GPLv3 T-SQL static analysis framework
+// Copyright (C) 2016 Taryn Hill
+
 use ast::Position;
 
 pub struct Context {

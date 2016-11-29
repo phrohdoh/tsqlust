@@ -1,3 +1,6 @@
+// tsqlust -- GPLv3 T-SQL static analysis framework
+// Copyright (C) 2016 Taryn Hill
+
 #[derive(PartialEq, Copy, Clone, Debug)]
 pub struct Position {
     pub line: usize,
