@@ -6,9 +6,9 @@ extern crate pest;
 use pest::{StringInput, Parser};
 use pest::prelude::{Token, Input};
 
-mod ast;
-mod visitor;
-mod diagnostics;
+pub mod ast;
+pub mod visitor;
+pub mod diagnostics;
 
 impl_rdp! {
     grammar! {
@@ -175,24 +175,21 @@ impl_rdp! {
     }
 }
 
-fn main() {
-    // TODO: Obviously you never want to compare constants.
-    //       So pred_cmp needs to take in idents which means expr needs to
-    //       grow to accept more than lit_integer.
-    let mut parser = Rdp::new(StringInput::new("SELECT TOP 10 * FROM MyTable"));
+pub fn get_diagnostics_for(query_string: &str,
+                           vis: &mut visitor::Visitor)
+                           -> Vec<diagnostics::Diagnostic> {
+    let mut ctx = diagnostics::Context::new();
+    let mut parser = Rdp::new(StringInput::new(query_string));
 
-    // TODO: This needs to be possible.
-    //       `(SELECT TOP 1 Id FROM MyOtherTable)` needs to become a lhs expr
-    // let mut parser = Rdp::new(StringInput::new("SELECT * FROM MyTable WHERE (SELECT TOP 1 Id FROM MyOtherTable) < 74"));
-
-    if parser.tsql() {
-        println!("{:#?}", parser.queue());
-        let stmt = parser.parse_stmt_select();
-        println!("{:#?}", stmt);
-    } else {
-        println!("Failed to parse tsql!");
-        println!("Expected: {:?}", parser.expected());
+    if !parser.tsql() {
+        println!("Failed to parse tsql");
+        return vec![];
     }
+
+    let select_statement = parser.parse_stmt_select().value;
+    vis.visit_select_statement(&mut ctx, &select_statement);
+
+    ctx.get_diagnostics()
 }
 
 #[cfg(test)]
