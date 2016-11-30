@@ -18,6 +18,7 @@ before_install: |
   if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     brew update &&
     brew install openssl &&
+    export SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt" &&
     export OPENSSL_INCLUDE_DIR="$(brew --prefix openssl)/include" &&
     export OPENSSL_LIB_DIR="$(brew --prefix openssl)/lib";
   fi
