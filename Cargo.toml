@@ -2,6 +2,12 @@
 name = "tsqlust"
 version = "0.1.0"
 authors = ["Taryn Hill <taryn@phrohdoh.com>"]
+description = "A T-SQL static-analysis framework"
+readme = "README.md"
+repository = "https://github.com/Phrohdoh/tsqlust"
+license = "GPLv3"
+exclude = ["examples/*", "tests/**"]
+keywords = ["tsql", "sql", "static analysis"]
 
 [dependencies]
 pest = "0.4.0"
