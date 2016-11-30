@@ -200,6 +200,8 @@ impl_rdp! {
     }
 }
 
+/// This is a helper function so that example code can be written.
+/// You should not rely on it or expect it to exist in any following versions.
 pub fn get_diagnostics_for_query(query_string: &str,
                                  vis: &mut visitor::Visitor)
                                  -> Vec<diagnostics::Diagnostic> {

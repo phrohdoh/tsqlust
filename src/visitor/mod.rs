@@ -4,6 +4,11 @@
 use ast::{SelectStatement, TopStatement};
 use diagnostics::Context;
 
+/// The trait that allows walking an AST.
+///
+/// You can record diagnostic messages (warnings, errors)
+/// via the [`Context`](../diagnostics/struct.Context.html)
+/// struct's `add_diagnostic` function.
 pub trait Visitor {
     fn visit_select_statement(&mut self, ctx: &mut Context, select_statement: &SelectStatement);
     fn visit_top_statement(&mut self, ctx: &mut Context, top_statement: &TopStatement);

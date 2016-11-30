@@ -8,11 +8,13 @@ pub struct Position {
 }
 
 impl Position {
+    /// Creates a tuple containing `line, col`.
     pub fn to_pair(&self) -> (usize, usize) {
         (self.line, self.col)
     }
 }
 
+/// The default is `{ line: 1, col: 1 }`.
 impl Default for Position {
     fn default() -> Position {
         Position { line: 1, col: 1 }
@@ -35,18 +37,21 @@ pub struct Node<TNode> {
 }
 
 #[derive(Debug)]
+/// A [`SELECT`](https://msdn.microsoft.com/en-us/library/ms189499.aspx) statement
 pub struct SelectStatement {
     pub top_statement: Option<Node<TopStatement>>,
     pub column_name_list: Node<ColumnNameList>,
 }
 
 impl SelectStatement {
+    /// Whether or not this `SELECT`'s column name list is a wildcard only
     pub fn is_star(&self) -> bool {
         self.column_name_list.value.is_star()
     }
 }
 
 #[derive(PartialEq, Debug)]
+/// Represents a literal value (not a variable) found in the query source.
 pub enum Literal {
     Bool(bool),
     Int(i32),
@@ -62,10 +67,19 @@ pub enum Expression {
 }
 
 #[derive(Debug)]
+/// A [`TOP`](https://msdn.microsoft.com/en-us/library/ms189463.aspx) statement
 pub struct TopStatement {
-    // TODO: Store this as a Token / Keyword / something other than just a Position
+    /// TODO: Store this as a Token / Keyword / something other than just a Position
     pub top_keyword_pos: Position,
     pub expr: Node<Expression>,
+
+    /// Indicates whether or not this is a legacy statement.
+    ///
+    /// Statements without parentheses are legacy.
+    ///
+    /// Legacy: `TOP 10`
+    ///
+    /// Non-legacy: `TOP (10)`
     pub is_legacy: bool,
 }
 
@@ -75,6 +89,7 @@ pub struct ColumnNameList {
 }
 
 impl ColumnNameList {
+    /// Whether or not this is a wildcard-only column name list
     pub fn is_star(&self) -> bool {
         if let Some(name) = self.column_names.get(0) {
             name == "*"
