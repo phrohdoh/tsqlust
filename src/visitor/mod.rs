@@ -6,6 +6,26 @@
 //! This is where the `Visitor` trait is defined.
 //!
 //! The purpose of this trait is so that you may write code against an AST.
+//!
+//! If you wanted to completely disallow `TOP` statements in your Visitor:
+//!
+//! ```rust
+//! use tsqlust::get_diagnostics_for_query;
+//! use tsqlust::ast::{SelectStatement, TopStatement};
+//! use tsqlust::visitor::Visitor;
+//! use tsqlust::diagnostics::{Context, Diagnostic, DiagnosticType};
+//! struct MyVisitor { }
+//! impl Visitor for MyVisitor {
+//!     fn visit_select_statement(&mut self, ctx: &mut Context, select_statement: &SelectStatement) { }
+//!     fn visit_top_statement(&mut self, ctx: &mut Context, top_statement: &TopStatement) {
+//!         ctx.add_diagnostic(Diagnostic {
+//!             diagnostic_type: DiagnosticType::Error,
+//!             pos: top_statement.top_keyword_pos,
+//!             message: "TOP statements are forbidden!".into(),
+//!         });
+//!     }
+//! }
+//! ```
 
 use ast::{SelectStatement, TopStatement};
 use diagnostics::Context;
