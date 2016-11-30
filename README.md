@@ -4,9 +4,7 @@
 
 ## LICENSE
 
-GPLv3 by default with a liberal license available for purchase.
-
-Contact me at `purchase@phrohdoh.com` for purchase information.
+GPLv3
 
 ## TODO
 
