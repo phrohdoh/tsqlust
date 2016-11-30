@@ -14,10 +14,17 @@
 //! use tsqlust::ast::{SelectStatement, TopStatement};
 //! use tsqlust::visitor::Visitor;
 //! use tsqlust::diagnostics::{Context, Diagnostic, DiagnosticType};
+//!
 //! struct MyVisitor { }
+//!
 //! impl Visitor for MyVisitor {
-//!     fn visit_select_statement(&mut self, ctx: &mut Context, select_statement: &SelectStatement) { }
-//!     fn visit_top_statement(&mut self, ctx: &mut Context, top_statement: &TopStatement) {
+//!     fn visit_select_statement(&mut self,
+//!                               ctx: &mut Context,
+//!                               select_statement: &SelectStatement) { }
+//!
+//!     fn visit_top_statement(&mut self,
+//!                               ctx: &mut Context,
+//!                               top_statement: &TopStatement) {
 //!         ctx.add_diagnostic(Diagnostic {
 //!             diagnostic_type: DiagnosticType::Error,
 //!             pos: top_statement.top_keyword_pos,
