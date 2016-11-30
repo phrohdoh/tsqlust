@@ -2,6 +2,8 @@
 
 ### A T-SQL lexer/parser/static-analysis framework
 
+[Documentation](https://phrohdoh.github.io/tsqlust/tsqlust/index.html)
+
 ## Project Goals
 
 > Provide developers with the ability to statically verify and analyze T-SQL queries
