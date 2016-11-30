@@ -12,7 +12,7 @@ How this is done:
 
 1. Create an AST from input (typically from a file)
 2. You will implement the provided `Visitor` trait
-3. Invoke `tsqlust::get_diagnostics_for(&your_sql)`
+3. Invoke `tsqlust::get_diagnostics_for_query(&your_sql)`
 4. Iterate over the resulting `Vec<tsqlust::diagnostics::Diagnostic>` and take action
 
 ## Usage Examples
