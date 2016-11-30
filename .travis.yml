@@ -1,0 +1,38 @@
+language: rust
+
+cache: cargo
+
+rust:
+  - stable
+  - nightly
+  
+matrix:
+  allow_failures:
+    - rust: nightly
+    
+os:
+  - linux
+  - osx
+
+before_install: |
+  if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    brew update &&
+    brew install openssl &&
+    export OPENSSL_INCLUDE_DIR="$(brew --prefix openssl)/include" &&
+    export OPENSSL_LIB_DIR="$(brew --prefix openssl)/lib";
+  fi
+
+script:
+  - cargo build --verbose
+  - cargo test --verbose
+  - cargo doc
+  
+after_success: |
+  [ $TRAVIS_OS_NAME = linux ] &&
+  [ $TRAVIS_BRANCH = master ] &&
+  [ $TRAVIS_PULL_REQUEST = false ] &&
+  [ $TRAVIS_RUST_VERSION = nightly ] &&
+  echo '<meta http-equiv=refresh content=0;url=tsqlust/index.html>' > target/doc/index.html &&
+  pip install ghp-import --user $USER &&
+  $HOME/.local/bin/ghp-import -n target/doc &&
+  git push -qf https://${TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages
