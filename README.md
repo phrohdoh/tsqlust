@@ -16,3 +16,11 @@ All of the GitHub Issues are todo and are up for grabs!
 ## Other
 
 Please review `CLA.md` before making contributions.
+
+This CLA is similar to those that Google, the Apache Foundation, Dropbox,
+
+and many others require contributors to sign before accepting contributions.
+
+The purpose of the CLA is to ensure that the project author may use the
+
+resulting works in whatever way they believe most benefits the project.
