@@ -2,6 +2,17 @@
 
 ### A T-SQL lexer/parser/static-analysis framework
 
+## Project Goals
+
+> Provide developers with the ability to statically verify and analyze T-SQL queries
+
+How this is done:
+
+1. Create an AST from input (typically from a file)
+2. You will implement the provided `Visitor` trait
+3. Invoke `tsqlust::get_diagnostics_for(&your_sql)`
+4. Iterate over the resulting `Vec<tsqlust::diagnostics::Diagnostic>` and take action
+
 ## LICENSE
 
 GPLv3
