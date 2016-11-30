@@ -1,6 +1,24 @@
 // tsqlust -- GPLv3 T-SQL static analysis framework
 // Copyright (C) 2016 Taryn Hill
 
+//! src/visitor/mod.rs
+//!
+//! This is where the `Visitor` trait is defined.
+//!
+//! The purpose of this trait is so that you may write code against an AST.
+//!
+//! If you wanted to completely disallow `TOP` statements in your Visitor:
+//!
+//! ```rust
+//! fn visit_top_statement(&mut self, ctx: &mut Context, top_statement: &TopStatement) {
+//!     ctx.add_diagnostic(Diagnostic {
+//!         diagnostic_type: DiagnosticType::Error,
+//!         pos: top_statement.value.top_keyword_pos,
+//!         message: "TOP statements are forbidden!".into(),
+//!     });
+//! }
+//! ```
+
 use ast::{SelectStatement, TopStatement};
 use diagnostics::Context;
 
