@@ -13,6 +13,10 @@ How this is done:
 3. Invoke `tsqlust::get_diagnostics_for(&your_sql)`
 4. Iterate over the resulting `Vec<tsqlust::diagnostics::Diagnostic>` and take action
 
+## Usage Examples
+
+See `src/bin/main.rs`
+
 ## LICENSE
 
 GPLv3
