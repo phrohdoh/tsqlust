@@ -35,9 +35,6 @@ impl Visitor for ExampleVisitor {
 }
 
 fn main() {
-    println!("This example is not functional, yet!");
-    return;
-
     match env::args().nth(1) {
         Some(file_path) => {
             let mut query_string = String::new();
@@ -45,7 +42,9 @@ fn main() {
             let _ = file.read_to_string(&mut query_string);
 
             let mut vis = ExampleVisitor {};
-            let diagnostics = get_diagnostics_for_tsql(&query_string, &mut vis);
+            let diagnostics = get_diagnostics_for_tsql(&query_string, &mut vis)
+                .expect("Failed to get diagnostics!");
+
             for diag in diagnostics {
                 println!("(line: {}, col: {}) -> {}",
                          diag.pos.line,

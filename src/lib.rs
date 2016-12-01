@@ -212,19 +212,26 @@ impl_rdp! {
 /// You should not rely on it or expect it to exist in any following versions.
 pub fn get_diagnostics_for_tsql(query_string: &str,
                                 vis: &mut visitor::Visitor)
-                                -> Vec<diagnostics::Diagnostic> {
+                                -> Result<Vec<diagnostics::Diagnostic>, (String, String)> {
     let mut ctx = diagnostics::Context::new();
     let mut parser = Rdp::new(StringInput::new(query_string));
 
     if !parser.tsql() {
-        println!("Failed to parse tsql");
-        return vec![];
+        let q = format!("{:?}", parser.queue());
+        let e = format!("{:?}", parser.expected());
+        return Err((q, e));
     }
 
     let select_statement = parser.parse_stmt_select().value;
     vis.visit_select_statement(&mut ctx, &select_statement);
 
-    ctx.get_diagnostics()
+    if let Some(top_statement_node) = select_statement.top_statement {
+        let top_statement = top_statement_node.value;
+
+        vis.visit_top_statement(&mut ctx, &top_statement);
+    }
+
+    Ok(ctx.get_diagnostics())
 }
 
 #[cfg(test)]
