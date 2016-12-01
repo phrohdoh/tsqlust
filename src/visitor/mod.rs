@@ -10,7 +10,7 @@
 //! If you wanted to completely disallow `TOP` statements in your Visitor:
 //!
 //! ```rust
-//! use tsqlust::get_diagnostics_for_query;
+//! use tsqlust::get_diagnostics_for_tsql;
 //! use tsqlust::ast::{SelectStatement, TopStatement};
 //! use tsqlust::visitor::Visitor;
 //! use tsqlust::diagnostics::{Context, Diagnostic, DiagnosticType};

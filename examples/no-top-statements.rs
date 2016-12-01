@@ -6,7 +6,7 @@ extern crate tsqlust;
 use std::env;
 use std::fs::File;
 use std::io::Read;
-use tsqlust::{ast, visitor, diagnostics, get_diagnostics_for_query};
+use tsqlust::{ast, visitor, diagnostics, get_diagnostics_for_tsql};
 
 use ast::{SelectStatement, TopStatement};
 use visitor::Visitor;
@@ -35,7 +35,7 @@ fn main() {
             let _ = file.read_to_string(&mut query_string);
 
             let mut vis = ExampleVisitor {};
-            let diagnostics = get_diagnostics_for_query(&query_string, &mut vis);
+            let diagnostics = get_diagnostics_for_tsql(&query_string, &mut vis);
             for diag in diagnostics {
                 println!("(line: {}, col: {}) -> {}",
                          diag.pos.line,
