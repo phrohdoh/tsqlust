@@ -31,3 +31,6 @@ after_success: |
   pip install ghp-import --user &&
   $HOME/.local/bin/ghp-import -n target/doc &&
   git push -qf https://${TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages
+
+notifications:
+  email: false
