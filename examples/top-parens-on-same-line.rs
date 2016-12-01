@@ -10,7 +10,7 @@ use tsqlust::{ast, visitor, diagnostics, get_diagnostics_for_tsql};
 
 use ast::{SelectStatement, TopStatement};
 use visitor::Visitor;
-use diagnostics::{Context, Diagnostic, DiagnosticType};
+use diagnostics::{Context, Diagnostic};
 
 struct ExampleVisitor { }
 
@@ -26,7 +26,7 @@ impl Visitor for ExampleVisitor {
 
         if close_paren.pos.line != open_paren.pos.line {
             ctx.add_diagnostic(Diagnostic {
-                diagnostic_type: DiagnosticType::Warning,
+                code: "EX0004".into(),
                 pos: close_paren.pos,
                 message: "Closing paren must be on the same line as the opening paren".into(),
             });

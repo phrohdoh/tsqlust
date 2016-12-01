@@ -10,7 +10,7 @@ use tsqlust::{ast, visitor, diagnostics, get_diagnostics_for_tsql};
 
 use ast::{SelectStatement, TopStatement};
 use visitor::Visitor;
-use diagnostics::{Context, Diagnostic, DiagnosticType};
+use diagnostics::{Context, Diagnostic};
 
 struct ExampleVisitor { }
 
@@ -19,9 +19,9 @@ impl Visitor for ExampleVisitor {
     fn visit_select_statement(&mut self, ctx: &mut Context, select_statement: &SelectStatement) {
         if let Some(ref top_statement) = select_statement.top_statement {
             ctx.add_diagnostic(Diagnostic {
-                diagnostic_type: DiagnosticType::Error,
+                code: "EX0001".into(),
                 pos: top_statement.value.top_keyword_pos,
-                message: "No TOP statements!".into(),
+                message: "TOP statements are forbidden!".into(),
             });
         }
     }

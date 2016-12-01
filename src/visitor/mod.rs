@@ -13,7 +13,7 @@
 //! use tsqlust::get_diagnostics_for_tsql;
 //! use tsqlust::ast::{SelectStatement, TopStatement};
 //! use tsqlust::visitor::Visitor;
-//! use tsqlust::diagnostics::{Context, Diagnostic, DiagnosticType};
+//! use tsqlust::diagnostics::{Context, Diagnostic};
 //!
 //! struct MyVisitor { }
 //!
@@ -26,7 +26,7 @@
 //!                               ctx: &mut Context,
 //!                               top_statement: &TopStatement) {
 //!         ctx.add_diagnostic(Diagnostic {
-//!             diagnostic_type: DiagnosticType::Error,
+//!             code: "EX0001".into(),
 //!             pos: top_statement.top_keyword_pos,
 //!             message: "TOP statements are forbidden!".into(),
 //!         });
@@ -52,7 +52,7 @@ mod tests {
     use super::Visitor;
     use pest::StringInput;
     use ast;
-    use diagnostics::{Context, Diagnostic, DiagnosticType};
+    use diagnostics::{Context, Diagnostic};
     use ::Rdp;
 
     struct TestVisitor { }
@@ -65,7 +65,7 @@ mod tests {
 
             if top_statement.is_legacy() {
                 ctx.add_diagnostic(Diagnostic {
-                    diagnostic_type: DiagnosticType::Error,
+                    code: "EX0002".into(),
                     pos: top_statement.top_keyword_pos,
                     message: "A legacy TOP statement is simply not allowed! Add parentheses."
                         .into(),
@@ -76,7 +76,7 @@ mod tests {
                 ast::Expression::Literal { lit: ast::Literal::Int(v) } => {
                     if v <= 0 {
                         ctx.add_diagnostic(Diagnostic {
-                            diagnostic_type: DiagnosticType::Warning,
+                            code: "EX0003".into(),
                             pos: expr_node.pos,
                             message: "A value <= 0 will yield an empty recordset".into(),
                         });
@@ -88,7 +88,7 @@ mod tests {
     }
 
     #[test]
-    fn top_0_diagnostic_warn() {
+    fn top_0_diagnostic_ex0003() {
         let mut parser = Rdp::new(StringInput::new("TOP (0)"));
         assert!(parser.stmt_top());
 
@@ -102,11 +102,11 @@ mod tests {
 
         let ref diag_warn = diags[0];
         assert_eq!(diag_warn.pos.to_pair(), (1, 6));
-        assert_eq!(diag_warn.diagnostic_type, DiagnosticType::Warning);
+        assert_eq!(diag_warn.code, "EX0003");
     }
 
     #[test]
-    fn top_0_diagnostic_warn_and_err() {
+    fn top_0_diagnostic_ex0002_and_ex0003() {
         let mut parser = Rdp::new(StringInput::new("TOP 0"));
         assert!(parser.stmt_top_legacy());
 
@@ -120,10 +120,10 @@ mod tests {
 
         let ref diag_err = diags[0];
         assert_eq!(diag_err.pos.to_pair(), (1, 1));
-        assert_eq!(diag_err.diagnostic_type, DiagnosticType::Error);
+        assert_eq!(diag_err.code, "EX0002");
 
         let ref diag_warn = diags[1];
         assert_eq!(diag_warn.pos.to_pair(), (1, 5));
-        assert_eq!(diag_warn.diagnostic_type, DiagnosticType::Warning);
+        assert_eq!(diag_warn.code, "EX0003");
     }
 }
