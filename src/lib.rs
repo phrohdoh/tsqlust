@@ -301,7 +301,6 @@ mod tests {
     //     let (expected, _) = parser.expected();
     //     assert_eq!(expected, Rule::tok_paren_open);
     // }
-    //
 
     #[test]
     fn top_972() {
