@@ -63,7 +63,7 @@ mod tests {
         fn visit_top_statement(&mut self, ctx: &mut Context, top_statement: &ast::TopStatement) {
             let ref expr_node = top_statement.expr;
 
-            if top_statement.is_legacy {
+            if top_statement.is_legacy() {
                 ctx.add_diagnostic(Diagnostic {
                     diagnostic_type: DiagnosticType::Error,
                     pos: top_statement.top_keyword_pos,

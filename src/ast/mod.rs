@@ -66,6 +66,12 @@ pub enum Expression {
     },
 }
 
+#[derive(PartialEq, Debug)]
+pub enum Token {
+    ParenOpen,
+    ParenClose,
+}
+
 #[derive(Debug)]
 /// A [`TOP`](https://msdn.microsoft.com/en-us/library/ms189463.aspx) statement
 pub struct TopStatement {
@@ -73,6 +79,11 @@ pub struct TopStatement {
     pub top_keyword_pos: Position,
     pub expr: Node<Expression>,
 
+    pub paren_open: Option<Node<Token>>,
+    pub paren_close: Option<Node<Token>>,
+}
+
+impl TopStatement {
     /// Indicates whether or not this is a legacy statement.
     ///
     /// Statements without parentheses are legacy.
@@ -80,7 +91,12 @@ pub struct TopStatement {
     /// Legacy: `TOP 10`
     ///
     /// Non-legacy: `TOP (10)`
-    pub is_legacy: bool,
+    pub fn is_legacy(&self) -> bool {
+        // We will fail to build the grammar (and therefore this node)
+        // if one of these exists but the other doesn't
+        // so either missing is indicitive of a legacy TOP statement.
+        self.paren_close.is_none() || self.paren_open.is_none()
+    }
 }
 
 #[derive(Debug)]

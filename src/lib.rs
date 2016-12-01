@@ -121,14 +121,21 @@ impl_rdp! {
         parse_stmt_top(&self) -> Option<ast::Node<ast::TopStatement>> {
             (pos: stmt_top
             ,kw: kw_top
-            ,_: tok_paren_open
+            ,paren_open: tok_paren_open
             ,expr: parse_expression()
-            ,_: tok_paren_close) => Some(ast::Node {
+            ,paren_close: tok_paren_close) => Some(ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
                 value: ast::TopStatement {
                     top_keyword_pos: ast::Position::from(self.input().line_col(kw.start)),
                     expr: expr,
-                    is_legacy: false,
+                    paren_open: Some(ast::Node {
+                        pos: ast::Position::from(self.input().line_col(paren_open.start)),
+                        value: ast::Token::ParenOpen,
+                    }),
+                    paren_close: Some(ast::Node {
+                        pos: ast::Position::from(self.input().line_col(paren_close.start)),
+                        value: ast::Token::ParenClose,
+                    }),
                 }
             }),
             (pos: stmt_top_legacy
@@ -138,7 +145,8 @@ impl_rdp! {
                 value: ast::TopStatement {
                     top_keyword_pos: ast::Position::from(self.input().line_col(kw.start)),
                     expr: expr,
-                    is_legacy: true,
+                    paren_open: None,
+                    paren_close: None,
                 }
             }),
             () => None,
@@ -261,7 +269,7 @@ mod tests {
         assert_eq!(top.pos.to_pair(), (1, 8));
 
         let top_value = top.value;
-        assert!(!top_value.is_legacy);
+        assert!(!top_value.is_legacy());
 
         let top_expr_value = top_value.expr.value;
         assert_eq!(top_expr_value,
@@ -278,13 +286,23 @@ mod tests {
         assert!(stmt_select.is_star());
     }
 
+    // TODO: Uncomment once https://github.com/dragostis/pest/issues/84 is fixed.
+    // #[test]
+    // fn top_fail_to_parse_expect_open_paren() {
+    //     let mut parser = Rdp::new(StringInput::new("TOP 509345)"));
+    //     assert!(!parser.stmt_top());
+    //     let (expected, _) = parser.expected();
+    //     assert_eq!(expected, Rule::tok_paren_open);
+    // }
+    //
+
     #[test]
     fn top_972() {
         let mut parser = Rdp::new(StringInput::new("TOP (972)"));
         assert!(parser.stmt_top());
 
         let stmt_top = parser.parse_stmt_top().unwrap().value;
-        assert!(!stmt_top.is_legacy);
+        assert!(!stmt_top.is_legacy());
 
         assert_eq!(stmt_top.expr.value,
                    ast::Expression::Literal { lit: ast::Literal::Int(972) });
