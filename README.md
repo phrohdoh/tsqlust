@@ -29,6 +29,10 @@ All of the GitHub Issues are todo and are up for grabs!
 
 * Write more tests
 
+## Supporting this project
+
+If you would like to financially support this project please [become a patron](https://www.patreon.com/Phrohdoh)!
+
 ## Other
 
 Please review `CLA.md` before making contributions.
