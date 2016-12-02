@@ -31,7 +31,10 @@ All of the GitHub Issues are todo and are up for grabs!
 
 ## Supporting this project
 
-If you would like to financially support this project please [become a patron](https://www.patreon.com/Phrohdoh)!
+If you would like to financially support this project please do the following:
+* [Become a patron](https://www.patreon.com/Phrohdoh)
+* [Tip me on gratipay](https://gratipay.com/~Phrohdoh/)
+* [E-mail me](mailto:taryn@phrohdoh.com) for one-time donation information
 
 ## Other
 
