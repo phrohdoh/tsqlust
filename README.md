@@ -17,7 +17,9 @@ How this is done:
 
 ## Usage Examples
 
-See `src/bin/main.rs`
+See:
+* `src/bin/main.rs`
+* `tests/external_test_0001.rs`
 
 ## LICENSE
 
