@@ -35,15 +35,3 @@ If you would like to financially support this project please do the following:
 * [Become a patron](https://www.patreon.com/Phrohdoh)
 * [Tip me on gratipay](https://gratipay.com/~Phrohdoh/)
 * [E-mail me](mailto:taryn@phrohdoh.com) for one-time donation information
-
-## Other
-
-Please review `CLA.md` before making contributions.
-
-This CLA is similar to those that Google, the Apache Foundation, Dropbox,
-
-and many others require contributors to sign before accepting contributions.
-
-The purpose of the CLA is to ensure that the project author may use the
-
-resulting works in whatever way they believe most benefits the project.
