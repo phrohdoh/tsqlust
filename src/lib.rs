@@ -223,13 +223,11 @@ pub fn get_diagnostics_for_tsql(query_string: &str,
         return Err((q, e));
     }
 
-    let select_statement = parser.parse_stmt_select().value;
-    vis.visit_select_statement(&mut ctx, &select_statement);
+    let select_node = parser.parse_stmt_select();
+    vis.visit_select_statement(&mut ctx, &select_node);
 
-    if let Some(top_statement_node) = select_statement.top_statement {
-        let top_statement = top_statement_node.value;
-
-        vis.visit_top_statement(&mut ctx, &top_statement);
+    if let Some(top_node) = select_node.value.top_statement {
+        vis.visit_top_statement(&mut ctx, &top_node);
     }
 
     Ok(ctx.get_diagnostics())

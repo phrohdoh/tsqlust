@@ -8,14 +8,15 @@ use std::fs::File;
 use std::io::Read;
 use tsqlust::{ast, visitor, diagnostics, get_diagnostics_for_tsql};
 
-use ast::TopStatement;
+use ast::{TopStatement, Node};
 use visitor::Visitor;
 use diagnostics::{Context, Diagnostic};
 
 struct ExampleVisitor { }
 
 impl Visitor for ExampleVisitor {
-    fn visit_top_statement(&mut self, ctx: &mut Context, top_statement: &TopStatement) {
+    fn visit_top_statement(&mut self, ctx: &mut Context, node: &Node<TopStatement>) {
+        let ref top_statement = node.value;
         if top_statement.is_legacy() {
             return;
         }

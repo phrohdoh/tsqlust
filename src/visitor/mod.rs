@@ -11,7 +11,7 @@
 //!
 //! ```rust
 //! use tsqlust::get_diagnostics_for_tsql;
-//! use tsqlust::ast::{SelectStatement, TopStatement};
+//! use tsqlust::ast::{SelectStatement, TopStatement, Node};
 //! use tsqlust::visitor::Visitor;
 //! use tsqlust::diagnostics::{Context, Diagnostic};
 //!
@@ -20,17 +20,17 @@
 //! impl Visitor for MyVisitor {
 //!     fn visit_top_statement(&mut self,
 //!                               ctx: &mut Context,
-//!                               top_statement: &TopStatement) {
+//!                               node: &Node<TopStatement>) {
 //!         ctx.add_diagnostic(Diagnostic {
 //!             code: "EX0001".into(),
-//!             pos: top_statement.top_keyword_pos,
+//!             pos: node.pos,
 //!             message: "TOP statements are forbidden!".into(),
 //!         });
 //!     }
 //! }
 //! ```
 
-use ast::{SelectStatement, TopStatement};
+use ast::{SelectStatement, TopStatement, Node};
 use diagnostics::Context;
 
 /// The trait that allows walking an AST.
@@ -39,28 +39,29 @@ use diagnostics::Context;
 /// via the [`Context`](../diagnostics/struct.Context.html)
 /// struct's `add_diagnostic` function.
 pub trait Visitor {
-    fn visit_select_statement(&mut self, _ctx: &mut Context, _select_statement: &SelectStatement) { }
-    fn visit_top_statement(&mut self, _ctx: &mut Context, _top_statement: &TopStatement) { }
+    fn visit_select_statement(&mut self, _ctx: &mut Context, _node: &Node<SelectStatement>) { }
+    fn visit_top_statement(&mut self, _ctx: &mut Context, _node: &Node<TopStatement>) { }
 }
 
 #[cfg(test)]
 mod tests {
     use super::Visitor;
     use pest::StringInput;
-    use ast;
+    use ast::{TopStatement, Node, self};
     use diagnostics::{Context, Diagnostic};
     use ::Rdp;
 
     struct TestVisitor { }
 
     impl Visitor for TestVisitor {
-        fn visit_top_statement(&mut self, ctx: &mut Context, top_statement: &ast::TopStatement) {
-            let ref expr_node = top_statement.expr;
+        fn visit_top_statement(&mut self, ctx: &mut Context, node: &Node<TopStatement>) {
+            let ref stmt = node.value;
+            let ref expr_node = stmt.expr;
 
-            if top_statement.is_legacy() {
+            if stmt.is_legacy() {
                 ctx.add_diagnostic(Diagnostic {
                     code: "EX0002".into(),
-                    pos: top_statement.top_keyword_pos,
+                    pos: node.pos,
                     message: "A legacy TOP statement is simply not allowed! Add parentheses."
                         .into(),
                 });
@@ -88,8 +89,8 @@ mod tests {
 
         let mut ctx = Context::new();
         let mut vis = TestVisitor {};
-        let stmt_top = parser.parse_stmt_top().unwrap().value;
-        vis.visit_top_statement(&mut ctx, &stmt_top);
+        let top_node = parser.parse_stmt_top().unwrap();
+        vis.visit_top_statement(&mut ctx, &top_node);
 
         let diags = ctx.get_diagnostics();
         assert_eq!(diags.len(), 1);
@@ -106,8 +107,8 @@ mod tests {
 
         let mut ctx = Context::new();
         let mut vis = TestVisitor {};
-        let stmt_top = parser.parse_stmt_top().unwrap().value;
-        vis.visit_top_statement(&mut ctx, &stmt_top);
+        let top_node = parser.parse_stmt_top().unwrap();
+        vis.visit_top_statement(&mut ctx, &top_node);
 
         let diags = ctx.get_diagnostics();
         assert_eq!(diags.len(), 2);
