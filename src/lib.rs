@@ -71,14 +71,14 @@ impl_rdp! {
         tok_comma = { [","] }
 
         tok_eq = { ["="] }
-//  tok_eq_eq = @{ tok_eq ~ tok_eq } // TODO: This is valid somewhere, where?
+    //  tok_eq_eq = @{ tok_eq ~ tok_eq } // TODO: This is valid somewhere, where?
         tok_bang = { ["!"] }
         tok_angle_open = { ["<"] }
         tok_angle_close = { [">"] }
 
         op_cmp = {
             op_cmp_eq
-//  | op_cmp_eq_eq
+        //  | op_cmp_eq_eq
             | op_cmp_neq_bang
             | op_cmp_lt
             | op_cmp_gt
@@ -87,7 +87,7 @@ impl_rdp! {
         }
 
         op_cmp_eq = { tok_eq }
-// op_cmp_eq_eq = @{ tok_eq ~ tok_eq }
+    //  op_cmp_eq_eq = @{ tok_eq ~ tok_eq }
         op_cmp_neq_bang = @{ tok_bang ~ tok_eq }
         op_cmp_lt = { tok_angle_open }
         op_cmp_gt = { tok_angle_close }
@@ -158,10 +158,11 @@ impl_rdp! {
                 ast::Node {
                     pos: ast::Position::from(self.input().line_col(columns.start)),
                     value: ast::ColumnNameList {
-// TODO:
-//   * We probably don't want to trim
-//   * column_names should be a Vec<Node<Identifier>>
-//     where Identifier = { value: String, leading_space: String }
+
+                        // TODO:
+                        // - We probably don't want to trim
+                        // - column_names should be a Vec<Node<Identifier>>
+                        //   where Identifier = { value: String, leading_space: String }
                         column_names: col_str.split(",").map(|t| t.trim().to_owned()).collect(),
                     }
                 }
