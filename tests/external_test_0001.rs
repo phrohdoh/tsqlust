@@ -1,6 +1,3 @@
-extern crate chrono;
-use chrono::{Local, Weekday, Datelike};
-
 extern crate pest;
 use pest::prelude::StringInput;
 
@@ -14,17 +11,11 @@ struct ExternalConsumer { }
 
 impl Visitor for ExternalConsumer {
     fn visit_select_statement(&mut self, ctx: &mut Context, select_statement: &SelectStatement) {
-        if select_statement.top_statement.is_some() {
-            return;
-        }
-
-        let local_now = Local::now();
-
-        if local_now.weekday() == Weekday::Fri {
+        if select_statement.top_statement.is_none() {
             ctx.add_diagnostic(Diagnostic {
-                code: "FD0001".into(),
+                code: "must-have-top".into(),
                 pos: Position::from((1, 1)), // TODO: Change visitors to take in Node<T> so `pos` can be accessed
-                message: "It is Friday. Relax with an ice-cold TOP.".into(),
+                message: "TOP statements are required, you don't want to pull down everything!".into(),
             });
         }
     }
