@@ -19,6 +19,8 @@ impl_rdp! {
             stmt_select
         ) ~ eoi }
 
+        // _anything = { any }
+
         stmt_top_legacy = { kw_top ~ lit_integer ~ kw_percent? }
         stmt_top = { kw_top ~ tok_paren_open ~ expr ~ tok_paren_close ~ kw_percent? ~ kw_with_ties? }
 
@@ -220,6 +222,12 @@ pub fn get_diagnostics_for_tsql(query_string: &str,
     if !parser.tsql() {
         let q = format!("{:?}", parser.queue());
         let e = format!("{:?}", parser.expected());
+        // Ideally we could do something like this (ref https://github.com/dragostis/pest/issues/90):
+        // let (expected_toks, idx) = parser.expected();
+        // parser._anything();
+        // parser.set_pos(idx - 1);
+        // let q = parser.queue();
+        // => found `q` expected one of `expected_toks`
         return Err((q, e));
     }
 
