@@ -7,7 +7,7 @@
 //!
 //! The purpose of this trait is so that you may write code against an AST.
 //!
-//! If you wanted to completely disallow `TOP` statements in your Visitor:
+//! If you wanted to completely disallow `TOP` statements in your queries:
 //!
 //! ```rust
 //! use tsqlust::get_diagnostics_for_tsql;
@@ -18,10 +18,6 @@
 //! struct MyVisitor { }
 //!
 //! impl Visitor for MyVisitor {
-//!     fn visit_select_statement(&mut self,
-//!                               ctx: &mut Context,
-//!                               select_statement: &SelectStatement) { }
-//!
 //!     fn visit_top_statement(&mut self,
 //!                               ctx: &mut Context,
 //!                               top_statement: &TopStatement) {
@@ -43,8 +39,8 @@ use diagnostics::Context;
 /// via the [`Context`](../diagnostics/struct.Context.html)
 /// struct's `add_diagnostic` function.
 pub trait Visitor {
-    fn visit_select_statement(&mut self, ctx: &mut Context, select_statement: &SelectStatement);
-    fn visit_top_statement(&mut self, ctx: &mut Context, top_statement: &TopStatement);
+    fn visit_select_statement(&mut self, _ctx: &mut Context, _select_statement: &SelectStatement) { }
+    fn visit_top_statement(&mut self, _ctx: &mut Context, _top_statement: &TopStatement) { }
 }
 
 #[cfg(test)]
@@ -58,8 +54,6 @@ mod tests {
     struct TestVisitor { }
 
     impl Visitor for TestVisitor {
-        fn visit_select_statement(&mut self, _: &mut Context, _: &ast::SelectStatement) {}
-
         fn visit_top_statement(&mut self, ctx: &mut Context, top_statement: &ast::TopStatement) {
             let ref expr_node = top_statement.expr;
 

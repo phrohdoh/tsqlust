@@ -8,14 +8,13 @@ use std::fs::File;
 use std::io::Read;
 use tsqlust::{ast, visitor, diagnostics, get_diagnostics_for_tsql};
 
-use ast::{SelectStatement, TopStatement};
+use ast::TopStatement;
 use visitor::Visitor;
 use diagnostics::{Context, Diagnostic};
 
 struct ExampleVisitor { }
 
 impl Visitor for ExampleVisitor {
-    fn visit_select_statement(&mut self, _: &mut Context, _: &SelectStatement) {}
     fn visit_top_statement(&mut self, ctx: &mut Context, top_statement: &TopStatement) {
         if top_statement.is_legacy() {
             return;

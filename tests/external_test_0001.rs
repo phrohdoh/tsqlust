@@ -2,7 +2,7 @@ extern crate pest;
 use pest::prelude::StringInput;
 
 extern crate tsqlust;
-use tsqlust::ast::{SelectStatement, TopStatement, Position};
+use tsqlust::ast::{SelectStatement, Position};
 use tsqlust::visitor::Visitor;
 use tsqlust::diagnostics::{Context, Diagnostic};
 use tsqlust::Rdp;
@@ -19,8 +19,6 @@ impl Visitor for ExternalConsumer {
             });
         }
     }
-
-    fn visit_top_statement(&mut self, _: &mut Context, _: &TopStatement) {}
 }
 
 #[test]
