@@ -15,9 +15,65 @@ How this is done:
 3. Invoke `tsqlust::get_diagnostics_for_tsql(&your_sql)`
 4. Iterate over the resulting `Vec<tsqlust::diagnostics::Diagnostic>` and take action
 
-## Usage Examples
+## Usage
 
 See the `tests/` and `examples/` directories.
+
+Example REPL session:
+```
+Enter 'q' at any time to quit.
+Enter '?' at any time for help.
+
+>> SELECT TOP 15 * FROM MyTable
+Node {
+    pos: Position {
+        line: 1,
+        col: 1
+    },
+    value: SelectStatement {
+        top_statement: Some(
+            Node {
+                pos: Position {
+                    line: 1,
+                    col: 8
+                },
+                value: TopStatement {
+                    top_keyword_pos: Position {
+                        line: 1,
+                        col: 8
+                    },
+                    expr: Node {
+                        pos: Position {
+                            line: 1,
+                            col: 12
+                        },
+                        value: Literal {
+                            lit: Int(
+                                15
+                            )
+                        }
+                    },
+                    paren_open: None,
+                    paren_close: None
+                }
+            }
+        ),
+        column_name_list: Node {
+            pos: Position {
+                line: 1,
+                col: 15
+            },
+            value: ColumnNameList {
+                column_names: [
+                    "*"
+                ]
+            }
+        }
+    }
+}
+>> q
+Goodbye!
+```
 
 ## LICENSE
 
