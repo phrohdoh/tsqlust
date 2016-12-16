@@ -17,7 +17,7 @@ fn main() {
 
     stdout.write(b"Enter q at any time to quit.\n");
     stdout.write(b"Enter ? at any time for help.\n");
-    stdout.write(b"Note: Inputting _ at all will crash the REPL.\n");
+    stdout.write(b"Note: Inputting _ will crash the REPL. See https://github.com/Phrohdoh/tsqlust/issues/13\n");
     stdout.write(b"\n");
 
     loop {
