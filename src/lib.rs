@@ -31,12 +31,21 @@ impl_rdp! {
             ~ clause_where?
         }
 
+        top_level_repl = _{
+            stmt_select
+            | stmt_top_legacy
+            | stmt_top
+            | expr
+            | literal
+        }
+
         expr = {
             lit_integer
             | expr_add
             | expr_subt
             | expr_mult
             | expr_div
+            | op_cmp
         }
 
         expr_add = { expr ~ tok_plus ~ expr }
@@ -52,12 +61,10 @@ impl_rdp! {
             | lit_integer
         }
 
-        term_id = @{ (
-            ['a'..'z'] |
-            ['A'..'Z'] |
-            ['0'..'9'] |
-            ["_"]
-        )+ }
+        term_id = @{
+            (['a'..'z'] | ['A'..'Z'] | ["_"])
+            ~ (['a'..'z'] | ['A'..'Z'] | ['0'..'9'] | ["_"])*
+        }
 
         tok_plus = { ["+"] }
         tok_minus = { ["-"] }

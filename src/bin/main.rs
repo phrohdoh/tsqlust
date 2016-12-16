@@ -1,23 +1,31 @@
+// tsqlust -- GPLv3 T-SQL static analysis framework
+// Copyright (C) 2016 Taryn Hill
+
 extern crate pest;
-use pest::StringInput;
+use pest::{Parser, StringInput};
 
 extern crate tsqlust;
-use tsqlust::Rdp;
+use tsqlust::{Rdp, Rule};
 
-use std::io::{self, BufRead, Write};
+use std::io::{self, BufRead, Write, StdoutLock};
 
 fn main() {
-    let stdin = io::stdin();
-    println!("Enter 'q' at any time to quit.");
-    println!("Enter '?' at any time for help.");
-    println!();
+    let mut stdin = io::stdin();
+    let mut stdin = stdin.lock();
+    let mut stdout = io::stdout();
+    let mut stdout = stdout.lock();
+
+    stdout.write(b"Enter q at any time to quit.\n");
+    stdout.write(b"Enter ? at any time for help.\n");
+    stdout.write(b"Note: Inputting _ at all will crash the REPL.\n");
+    stdout.write(b"\n");
 
     loop {
-        print!(">> ");
-        io::stdout().flush().expect("Failed to flush stdout");
+        stdout.write(b">> ");
+        stdout.flush().expect("Failed to flush stdout");
 
         let mut line = String::new();
-        stdin.lock().read_line(&mut line).expect("Failed to read from stdin");
+        stdin.read_line(&mut line).expect("Failed to read from stdin");
         line = line.trim().to_string();
 
         if line.is_empty() {
@@ -27,28 +35,32 @@ fn main() {
         let line_str = line.as_str();
         match line_str {
             "help" | "?" | "/h" | "/?" => {
-                println!("Type 'q' at any time to quit.");
+                stdout.write(b"Enter q at any time to quit.\n");
                 continue;
             }
-            "q" | "quit" => {
-                println!("Goodbye!");
+            "q" | "quit" | "exit" => {
+                stdout.write(b"Goodbye!\n");
                 break;
             }
             _ => {
                 let mut parser = Rdp::new(StringInput::new(line_str));
-                print_ast(&mut parser);
+                print_ast(&mut parser, &mut stdout);
             }
         }
     }
 }
 
-fn print_ast(parser: &mut Rdp<StringInput>) {
-    if !parser.tsql() {
-        println!("Invalid TSQL (TODO: explain why)");
-        println!("Currently this REPL only accepts valid SELECT statements.");
-        println!("Try: SELECT * FROM YourTableName");
-        return;
+fn print_ast(parser: &mut Rdp<StringInput>, stdout: &mut StdoutLock) {
+    if parser.top_level_repl() {
+        let first = parser.queue().get(0).unwrap();
+        match first.rule {
+            Rule::stmt_select => {
+                stdout.write(format!("{:#?}\n", parser.parse_stmt_select()).as_bytes());
+            },
+            Rule::stmt_top_legacy | Rule::stmt_top => {
+                stdout.write(format!("{:#?}\n", parser.parse_stmt_top()).as_bytes());
+            },
+            r @ _ => { stdout.write(format!("{:#?}\n", r).as_bytes()); }
+        }
     }
-
-    println!("{:#?}", parser.parse_stmt_select());
 }
