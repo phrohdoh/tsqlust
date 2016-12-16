@@ -45,7 +45,6 @@ impl_rdp! {
             | expr_subt
             | expr_mult
             | expr_div
-            | op_cmp
         }
 
         expr_add = { expr ~ tok_plus ~ expr }
@@ -119,8 +118,8 @@ impl_rdp! {
         clause_where = { kw_where ~ pred_cmp }
 
         column_name_list = {
-            tok_star
-            | term_id ~ (tok_comma ~ term_id)*
+            (tok_star | term_id)
+            ~ (tok_comma ~ (term_id | tok_star))*
         }
 
         whitespace = _{ [" "] | ["\t"] | ["\r"] | ["\n"] }
