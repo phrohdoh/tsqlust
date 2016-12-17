@@ -41,16 +41,16 @@ impl_rdp! {
 
         expr = {
             lit_integer
-            | expr_add
-            | expr_subt
-            | expr_mult
-            | expr_div
+            //| expr_add
+            //| expr_subt
+            //| expr_mult
+            //| expr_div
         }
 
-        expr_add = { expr ~ tok_plus ~ expr }
-        expr_subt = { expr ~ tok_minus ~ expr }
-        expr_mult = { expr ~ tok_star ~ expr }
-        expr_div = { expr ~ tok_slash_forward ~ expr }
+        //expr_add = { expr ~ tok_plus ~ expr }
+        //expr_subt = { expr ~ tok_minus ~ expr }
+        //expr_mult = { expr ~ tok_star ~ expr }
+        //expr_div = { expr ~ tok_slash_forward ~ expr }
 
         lit_bool = { [i"TRUE"] | [i"FALSE"] }
         lit_integer = @{ ['0'..'9']+ }
