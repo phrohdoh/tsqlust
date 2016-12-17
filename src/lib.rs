@@ -260,8 +260,8 @@ mod tests {
         let mut parser = Rdp::new(StringInput::new("*"));
         assert!(parser.column_name_list());
 
-        let columns = parser.parse_column_name_list().value;
-        assert!(columns.is_star());
+        let columns = parser.parse_column_name_list().value.column_names;
+        assert_eq!(columns, vec![ "*" ]);
     }
 
     #[test]
@@ -283,8 +283,6 @@ mod tests {
         assert_eq!(stmt_select.pos.to_pair(), (1, 1));
 
         let select_value = stmt_select.value;
-        assert!(select_value.is_star());
-
         let top = select_value.top_statement.unwrap();
         assert_eq!(top.pos.to_pair(), (1, 8));
 
@@ -303,7 +301,6 @@ mod tests {
 
         let stmt_select = parser.parse_stmt_select().value;
         assert!(stmt_select.top_statement.is_some());
-        assert!(stmt_select.is_star());
     }
 
     // TODO: Uncomment once https://github.com/dragostis/pest/issues/84 is fixed.

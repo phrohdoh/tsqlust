@@ -43,13 +43,6 @@ pub struct SelectStatement {
     pub column_name_list: Node<ColumnNameList>,
 }
 
-impl SelectStatement {
-    /// Whether or not this `SELECT`'s column name list is a wildcard only
-    pub fn is_star(&self) -> bool {
-        self.column_name_list.value.is_star()
-    }
-}
-
 #[derive(PartialEq, Debug)]
 /// Represents a literal value (not a variable) found in the query source.
 pub enum Literal {
@@ -102,15 +95,4 @@ impl TopStatement {
 #[derive(Debug)]
 pub struct ColumnNameList {
     pub column_names: Vec<String>,
-}
-
-impl ColumnNameList {
-    /// Whether or not this is a wildcard-only column name list
-    pub fn is_star(&self) -> bool {
-        if let Some(name) = self.column_names.get(0) {
-            name == "*"
-        } else {
-            false
-        }
-    }
 }
