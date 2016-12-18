@@ -19,7 +19,7 @@ impl_rdp! {
             stmt_select
         ) ~ eoi }
 
-        // _anything = { any }
+// _anything = { any }
 
         stmt_top_legacy = { kw_top ~ lit_integer ~ kw_percent? }
         stmt_top = { kw_top ~ tok_paren_open ~ expr ~ tok_paren_close ~ kw_percent? ~ kw_with_ties? }
@@ -41,16 +41,16 @@ impl_rdp! {
 
         expr = {
             lit_integer
-            //| expr_add
-            //| expr_subt
-            //| expr_mult
-            //| expr_div
+// | expr_add
+// | expr_subt
+// | expr_mult
+// | expr_div
         }
 
-        //expr_add = { expr ~ tok_plus ~ expr }
-        //expr_subt = { expr ~ tok_minus ~ expr }
-        //expr_mult = { expr ~ tok_star ~ expr }
-        //expr_div = { expr ~ tok_slash_forward ~ expr }
+// expr_add = { expr ~ tok_plus ~ expr }
+// expr_subt = { expr ~ tok_minus ~ expr }
+// expr_mult = { expr ~ tok_star ~ expr }
+// expr_div = { expr ~ tok_slash_forward ~ expr }
 
         lit_bool = { [i"TRUE"] | [i"FALSE"] }
         lit_integer = @{ ['0'..'9']+ }
@@ -79,14 +79,14 @@ impl_rdp! {
         tok_comma = { [","] }
 
         tok_eq = { ["="] }
-    //  tok_eq_eq = @{ tok_eq ~ tok_eq } // TODO: This is valid somewhere, where?
+//  tok_eq_eq = @{ tok_eq ~ tok_eq } // TODO: This is valid somewhere, where?
         tok_bang = { ["!"] }
         tok_angle_open = { ["<"] }
         tok_angle_close = { [">"] }
 
         op_cmp = {
             op_cmp_eq
-        //  | op_cmp_eq_eq
+//  | op_cmp_eq_eq
             | op_cmp_neq_bang
             | op_cmp_lt
             | op_cmp_gt
@@ -95,7 +95,7 @@ impl_rdp! {
         }
 
         op_cmp_eq = { tok_eq }
-    //  op_cmp_eq_eq = @{ tok_eq ~ tok_eq }
+//  op_cmp_eq_eq = @{ tok_eq ~ tok_eq }
         op_cmp_neq_bang = @{ tok_bang ~ tok_eq }
         op_cmp_lt = { tok_angle_open }
         op_cmp_gt = { tok_angle_close }
@@ -176,12 +176,17 @@ impl_rdp! {
                         continue;
                     }
 
-                    if ch == ',' || pos + ch.len_utf8() == len {
+                    if ch == ',' {
                         in_word = false;
                         names_and_start_pos.push((word, start_pos));
                         start_pos = 0usize;
                         word = String::new();
                         continue;
+                    } else if pos + ch.len_utf8() == len {
+                        in_word = false;
+                        word.push(ch);
+                        names_and_start_pos.push((word, start_pos));
+                        word = String::new();
                     } else if in_word {
                         word.push(ch);
                     } else {
@@ -289,7 +294,7 @@ mod tests {
         assert!(parser.column_name_list());
 
         let columns = parser.parse_column_name_list().value.column_names;
-        assert_eq!(columns, vec![ "*" ]);
+        assert_eq!(columns, vec!["*"]);
     }
 
     #[test]
