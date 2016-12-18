@@ -38,7 +38,6 @@ fn main() {
         match line_str {
             "help" | "?" | "/h" | "/?" => {
                 stdout.write(b"Enter q at any time to quit.\n");
-                continue;
             }
             "q" | "quit" | "exit" => {
                 stdout.write(b"Goodbye!\n");
@@ -47,7 +46,12 @@ fn main() {
             _ => {
                 let mut parser = Rdp::new(StringInput::new(line_str));
                 if !try_print_ast(&mut parser, &mut stdout) {
-                    return;
+                    stdout.write("tsqlust did not expect this input, please report this.\n"
+                        .as_bytes());
+                    assert!(!parser.top_level_repl());
+                    stdout.write(format!("Queue:\n{:#?}\n", parser.queue()).as_bytes());
+                    stdout.write(format!("Expected:\n{:#?}\n", parser.expected()).as_bytes());
+                    break;
                 }
             }
         }
@@ -60,19 +64,17 @@ fn try_print_ast(parser: &mut Rdp<StringInput>, stdout: &mut StdoutLock) -> bool
         match first.rule {
             Rule::stmt_select => {
                 stdout.write(format!("{:#?}\n", parser.parse_stmt_select()).as_bytes());
-            },
-            Rule::stmt_top_legacy | Rule::stmt_top => {
+            }
+            Rule::stmt_top_legacy |
+            Rule::stmt_top => {
                 stdout.write(format!("{:#?}\n", parser.parse_stmt_top()).as_bytes());
-            },
-            r @ _ => { stdout.write(format!("{:#?}\n", r).as_bytes()); }
+            }
+            r @ _ => {
+                stdout.write(format!("{:#?}\n", r).as_bytes());
+            }
         }
+        true
     } else {
-        stdout.write("tsqlust did not expect this input, please report this.\n".as_bytes());
-        assert!(!parser.top_level_repl());
-        stdout.write(format!("Queue:\n{:#?}\n", parser.queue()).as_bytes());
-        stdout.write(format!("Expected:\n{:#?}\n", parser.expected()).as_bytes());
-        return false;
+        false
     }
-
-    true
 }
