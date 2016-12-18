@@ -158,7 +158,7 @@ impl_rdp! {
                 }
             }),
             () => None,
-        } // parse_stmt_top
+        }
 
         parse_column_name_list(&self) -> ast::Node<ast::ColumnNameList> {
             (columns: column_name_list) => {
@@ -246,7 +246,7 @@ impl_rdp! {
                     column_name_list: columns,
                 }
             },
-        } // parse_stmt_select
+        }
     }
 }
 
