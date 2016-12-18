@@ -41,16 +41,16 @@ impl_rdp! {
 
         expr = {
             lit_integer
-            //| expr_add
-            //| expr_subt
-            //| expr_mult
-            //| expr_div
+        //  | expr_add
+        //  | expr_subt
+        //  | expr_mult
+        //  | expr_div
         }
 
-        //expr_add = { expr ~ tok_plus ~ expr }
-        //expr_subt = { expr ~ tok_minus ~ expr }
-        //expr_mult = { expr ~ tok_star ~ expr }
-        //expr_div = { expr ~ tok_slash_forward ~ expr }
+        // expr_add = { expr ~ tok_plus ~ expr }
+        // expr_subt = { expr ~ tok_minus ~ expr }
+        // expr_mult = { expr ~ tok_star ~ expr }
+        // expr_div = { expr ~ tok_slash_forward ~ expr }
 
         lit_bool = { [i"TRUE"] | [i"FALSE"] }
         lit_integer = @{ ['0'..'9']+ }
@@ -293,8 +293,13 @@ mod tests {
         let mut parser = Rdp::new(StringInput::new("*"));
         assert!(parser.column_name_list());
 
-        let ident = parser.parse_column_name_list().value.identifiers.into_iter().map(|idt_node| idt_node.value.value).collect::<Vec<String>>();
-        assert_eq!(ident, vec![ "*" ]);
+        let ident = parser.parse_column_name_list()
+            .value
+            .identifiers
+            .into_iter()
+            .map(|idt_node| idt_node.value.value)
+            .collect::<Vec<String>>();
+        assert_eq!(ident, vec!["*"]);
     }
 
     #[test]
@@ -302,7 +307,12 @@ mod tests {
         let mut parser = Rdp::new(StringInput::new("Id,SomeColumn,ColumnA,  ColumnB,  Foo  ,Qux"));
         assert!(parser.column_name_list());
 
-        let idents = parser.parse_column_name_list().value.identifiers.into_iter().map(|idt_node| idt_node.value.value).collect::<Vec<String>>();
+        let idents = parser.parse_column_name_list()
+            .value
+            .identifiers
+            .into_iter()
+            .map(|idt_node| idt_node.value.value)
+            .collect::<Vec<String>>();
         assert_eq!(idents,
                    vec!["Id", "SomeColumn", "ColumnA", "ColumnB", "Foo", "Qux"]);
     }

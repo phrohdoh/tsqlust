@@ -39,15 +39,15 @@ use diagnostics::Context;
 /// via the [`Context`](../diagnostics/struct.Context.html)
 /// struct's `add_diagnostic` function.
 pub trait Visitor {
-    fn visit_select_statement(&mut self, _ctx: &mut Context, _node: &Node<SelectStatement>) { }
-    fn visit_top_statement(&mut self, _ctx: &mut Context, _node: &Node<TopStatement>) { }
+    fn visit_select_statement(&mut self, _ctx: &mut Context, _node: &Node<SelectStatement>) {}
+    fn visit_top_statement(&mut self, _ctx: &mut Context, _node: &Node<TopStatement>) {}
 }
 
 #[cfg(test)]
 mod tests {
     use super::Visitor;
     use pest::StringInput;
-    use ast::{TopStatement, Node, self};
+    use ast::{self, TopStatement, Node};
     use diagnostics::{Context, Diagnostic};
     use ::Rdp;
 
