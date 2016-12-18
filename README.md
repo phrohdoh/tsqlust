@@ -19,7 +19,7 @@ How this is done:
 
 See the `tests/` and `examples/` directories.
 
-Example REPL session:
+Example REPL session (start via `cargo run`):
 ```
 Enter 'q' at any time to quit.
 Enter '?' at any time for help.
