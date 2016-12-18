@@ -1,19 +1,20 @@
 // tsqlust -- GPLv3 T-SQL static analysis framework
 // Copyright (C) 2016 Taryn Hill
 
+#![allow(unused_must_use)]
+
 extern crate pest;
 use pest::{Parser, StringInput};
 
 extern crate tsqlust;
 use tsqlust::{Rdp, Rule};
 
-use std::io::{self, Read, BufRead, Write, StdoutLock};
-use std::fs::File;
+use std::io::{self, BufRead, Write, StdoutLock};
 
 fn main() {
-    let mut stdin = io::stdin();
+    let stdin = io::stdin();
     let mut stdin = stdin.lock();
-    let mut stdout = io::stdout();
+    let stdout = io::stdout();
     let mut stdout = stdout.lock();
 
     stdout.write(b"Enter q at any time to quit.\n");
