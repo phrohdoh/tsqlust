@@ -31,8 +31,13 @@ impl_rdp! {
             ~ clause_where?
         }
 
+        stmt_create_table = {
+            kw_create_table ~ term_id
+        }
+
         top_level_repl = _{
             stmt_select
+            | stmt_create_table
             | stmt_top_legacy
             | stmt_top
             | expr
@@ -107,7 +112,8 @@ impl_rdp! {
         kw_from = { [i"FROM"] }
         kw_where = { [i"WHERE"] }
         kw_percent = { [i"PERCENT"] }
-        kw_with_ties = { [i"WITH TIES"] }
+        kw_with_ties = { [i"WITH"] ~ [i"TIES"] }
+        kw_create_table = { [i"CREATE"] ~ [i"TABLE"] }
 
         kw_or = { [i"OR"] }
         kw_and = { [i"AND"] }
@@ -158,6 +164,26 @@ impl_rdp! {
                 }
             }),
             () => None,
+        }
+
+        parse_stmt_create_table(&self) -> ast::Node<ast::CreateTableStatement> {
+            (_: stmt_create_table
+            ,kw: kw_create_table
+            ,ident: parse_identifier()) => ast::Node {
+                pos: ast::Position::from(self.input().line_col(kw.start)),
+                value: ast::CreateTableStatement {
+                    table_identifier: ident,
+                },
+            }
+        }
+
+        parse_identifier(&self) -> ast::Node<ast::Identifier> {
+            (term_id: term_id) => ast::Node {
+                pos: ast::Position::from(self.input().line_col(term_id.start)),
+                value: ast::Identifier {
+                    value: self.input().slice(term_id.start, term_id.end).into(),
+                }
+            }
         }
 
         parse_column_name_list(&self) -> ast::Node<ast::ColumnNameList> {

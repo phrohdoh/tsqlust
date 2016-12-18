@@ -102,3 +102,8 @@ impl TopStatement {
 pub struct ColumnNameList {
     pub identifiers: Vec<Node<Identifier>>,
 }
+
+#[derive(Debug)]
+pub struct CreateTableStatement {
+    pub table_identifier: Node<Identifier>,
+}
