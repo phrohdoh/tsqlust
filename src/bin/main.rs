@@ -65,12 +65,15 @@ fn try_print_ast(parser: &mut Rdp<StringInput>, stdout: &mut StdoutLock) -> bool
             Rule::stmt_select => {
                 stdout.write(format!("{:#?}\n", parser.parse_stmt_select()).as_bytes());
             }
-            Rule::stmt_top_legacy |
-            Rule::stmt_top => {
+            Rule::stmt_top_legacy
+            | Rule::stmt_top => {
                 stdout.write(format!("{:#?}\n", parser.parse_stmt_top()).as_bytes());
             }
             Rule::stmt_create_table => {
                 stdout.write(format!("{:#?}\n", parser.parse_stmt_create_table()).as_bytes());
+            }
+            Rule::identifier => {
+                stdout.write(format!("{:#?}\n", parser.parse_identifier()).as_bytes());
             }
             r @ _ => {
                 stdout.write(format!("{:#?}\n", r).as_bytes());

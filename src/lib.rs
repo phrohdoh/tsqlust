@@ -27,12 +27,12 @@ impl_rdp! {
         stmt_select = {
             kw_select
             ~ (stmt_top | stmt_top_legacy)?
-            ~ column_name_list ~ kw_from ~ term_id
+            ~ column_name_list ~ kw_from ~ identifier
             ~ clause_where?
         }
 
         stmt_create_table = {
-            kw_create_table ~ term_id
+            kw_create_table ~ identifier
         }
 
         top_level_repl = _{
@@ -42,6 +42,7 @@ impl_rdp! {
             | stmt_top
             | expr
             | literal
+            | identifier
         }
 
         expr = {
@@ -65,7 +66,7 @@ impl_rdp! {
             | lit_integer
         }
 
-        term_id = @{
+        identifier = @{
             (['a'..'z'] | ['A'..'Z'] | ["_"])
             ~ (['a'..'z'] | ['A'..'Z'] | ['0'..'9'] | ["_"])*
         }
@@ -124,8 +125,8 @@ impl_rdp! {
         clause_where = { kw_where ~ pred_cmp }
 
         column_name_list = {
-            (tok_star | term_id)
-            ~ (tok_comma ~ (term_id | tok_star))*
+            (tok_star | identifier)
+            ~ (tok_comma ~ (identifier | tok_star))*
         }
 
         whitespace = _{ [" "] | ["\t"] | ["\r"] | ["\n"] }
@@ -178,10 +179,10 @@ impl_rdp! {
         }
 
         parse_identifier(&self) -> ast::Node<ast::Identifier> {
-            (term_id: term_id) => ast::Node {
-                pos: ast::Position::from(self.input().line_col(term_id.start)),
+            (identifier: identifier) => ast::Node {
+                pos: ast::Position::from(self.input().line_col(identifier.start)),
                 value: ast::Identifier {
-                    value: self.input().slice(term_id.start, term_id.end).into(),
+                    value: self.input().slice(identifier.start, identifier.end).into(),
                 }
             }
         }
@@ -265,11 +266,14 @@ impl_rdp! {
             ,_: kw_select
             ,stmt_top: parse_stmt_top()
             ,columns: parse_column_name_list()
+            ,_: kw_from
+            ,table_ident: parse_identifier()
             ) => ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
                 value: ast::SelectStatement {
                     top_statement: stmt_top,
                     column_name_list: columns,
+                    table_identifier: table_ident,
                 }
             },
         }
@@ -329,7 +333,7 @@ mod tests {
     }
 
     #[test]
-    fn column_name_list_term_ids() {
+    fn column_name_list_identifiers() {
         let mut parser = Rdp::new(StringInput::new("Id,SomeColumn,ColumnA,  ColumnB,  Foo  ,Qux"));
         assert!(parser.column_name_list());
 

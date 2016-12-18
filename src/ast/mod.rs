@@ -41,6 +41,7 @@ pub struct Node<TNode> {
 pub struct SelectStatement {
     pub top_statement: Option<Node<TopStatement>>,
     pub column_name_list: Node<ColumnNameList>,
+    pub table_identifier: Node<Identifier>,
 }
 
 #[derive(PartialEq, Debug)]
