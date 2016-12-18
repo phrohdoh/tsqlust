@@ -162,16 +162,49 @@ impl_rdp! {
 
         parse_column_name_list(&self) -> ast::Node<ast::ColumnNameList> {
             (columns: column_name_list) => {
+                // TODO: Make this entire body more functional.
+                let pos = self.input().line_col(columns.start);
                 let col_str = self.input().slice(columns.start, columns.end);
-                ast::Node {
-                    pos: ast::Position::from(self.input().line_col(columns.start)),
-                    value: ast::ColumnNameList {
+                let mut names_and_start_pos = Vec::new();
 
-                        // TODO:
-                        // - We probably don't want to trim
-                        // - column_names should be a Vec<Node<Identifier>>
-                        //   where Identifier = { value: String, leading_space: String }
-                        column_names: col_str.split(",").map(|t| t.trim().to_owned()).collect(),
+                let mut in_word = false;
+                let mut word = String::new();
+                let mut start_pos = 0usize;
+
+                let len = col_str.len();
+                for (pos, ch) in col_str.char_indices() {
+                    if ch.is_whitespace() {
+                        continue;
+                    }
+
+                    if ch == ',' {
+                        in_word = false;
+                        names_and_start_pos.push((word, start_pos));
+                        start_pos = 0usize;
+                        word = String::new();
+                    } else if pos + ch.len_utf8() == len {
+                        in_word = false;
+                        word.push(ch);
+                        names_and_start_pos.push((word, start_pos));
+                        word = String::new();
+                    } else if in_word {
+                        word.push(ch);
+                    } else {
+                        in_word = true;
+                        start_pos = pos;
+                        word.push(ch);
+                    }
+                }
+
+                ast::Node {
+                    pos: ast::Position::from(pos),
+                    value: ast::ColumnNameList {
+                        identifiers: names_and_start_pos.into_iter().map(|(n, p)| ast::Node {
+                            pos: ast::Position::from(self.input().line_col(p + columns.start)),
+                            value: ast::Identifier {
+                                value: n,
+                            }
+                        }).collect(),
                     }
                 }
             }
@@ -260,8 +293,8 @@ mod tests {
         let mut parser = Rdp::new(StringInput::new("*"));
         assert!(parser.column_name_list());
 
-        let columns = parser.parse_column_name_list().value.column_names;
-        assert_eq!(columns, vec![ "*" ]);
+        let ident = parser.parse_column_name_list().value.identifiers.into_iter().map(|idt_node| idt_node.value.value).collect::<Vec<String>>();
+        assert_eq!(ident, vec![ "*" ]);
     }
 
     #[test]
@@ -269,8 +302,8 @@ mod tests {
         let mut parser = Rdp::new(StringInput::new("Id,SomeColumn,ColumnA,  ColumnB,  Foo  ,Qux"));
         assert!(parser.column_name_list());
 
-        let columns = parser.parse_column_name_list().value.column_names;
-        assert_eq!(columns,
+        let idents = parser.parse_column_name_list().value.identifiers.into_iter().map(|idt_node| idt_node.value.value).collect::<Vec<String>>();
+        assert_eq!(idents,
                    vec!["Id", "SomeColumn", "ColumnA", "ColumnB", "Foo", "Qux"]);
     }
 

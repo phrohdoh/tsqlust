@@ -53,6 +53,12 @@ pub enum Literal {
 }
 
 #[derive(PartialEq, Debug)]
+/// A table or column name
+pub struct Identifier {
+    pub value: String,
+}
+
+#[derive(PartialEq, Debug)]
 pub enum Expression {
     Literal {
         lit: Literal,
@@ -94,5 +100,5 @@ impl TopStatement {
 
 #[derive(Debug)]
 pub struct ColumnNameList {
-    pub column_names: Vec<String>,
+    pub identifiers: Vec<Node<Identifier>>,
 }

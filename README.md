@@ -21,10 +21,7 @@ See the `tests/` and `examples/` directories.
 
 Example REPL session (start via `cargo run`):
 ```
-Enter 'q' at any time to quit.
-Enter '?' at any time for help.
-
->> SELECT TOP 15 * FROM MyTable
+>> SELECT TOP (5) Id,SomeOtherColumn ,YetAnotherColumn FROM MyTable
 Node {
     pos: Position {
         line: 1,
@@ -45,34 +42,74 @@ Node {
                     expr: Node {
                         pos: Position {
                             line: 1,
-                            col: 12
+                            col: 13
                         },
                         value: Literal {
                             lit: Int(
-                                15
+                                5
                             )
                         }
                     },
-                    paren_open: None,
-                    paren_close: None
+                    paren_open: Some(
+                        Node {
+                            pos: Position {
+                                line: 1,
+                                col: 12
+                            },
+                            value: ParenOpen
+                        }
+                    ),
+                    paren_close: Some(
+                        Node {
+                            pos: Position {
+                                line: 1,
+                                col: 14
+                            },
+                            value: ParenClose
+                        }
+                    )
                 }
             }
         ),
         column_name_list: Node {
             pos: Position {
                 line: 1,
-                col: 15
+                col: 16
             },
             value: ColumnNameList {
-                column_names: [
-                    "*"
+                identifiers: [
+                    Node {
+                        pos: Position {
+                            line: 1,
+                            col: 16
+                        },
+                        value: Identifier {
+                            value: "Id"
+                        }
+                    },
+                    Node {
+                        pos: Position {
+                            line: 1,
+                            col: 19
+                        },
+                        value: Identifier {
+                            value: "SomeOtherColumn"
+                        }
+                    },
+                    Node {
+                        pos: Position {
+                            line: 1,
+                            col: 36
+                        },
+                        value: Identifier {
+                            value: "YetAnotherColumn"
+                        }
+                    }
                 ]
             }
         }
     }
 }
->> q
-Goodbye!
 ```
 
 ## LICENSE

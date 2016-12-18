@@ -7,7 +7,8 @@ use pest::{Parser, StringInput};
 extern crate tsqlust;
 use tsqlust::{Rdp, Rule};
 
-use std::io::{self, BufRead, Write, StdoutLock};
+use std::io::{self, Read, BufRead, Write, StdoutLock};
+use std::fs::File;
 
 fn main() {
     let mut stdin = io::stdin();
@@ -44,13 +45,15 @@ fn main() {
             }
             _ => {
                 let mut parser = Rdp::new(StringInput::new(line_str));
-                print_ast(&mut parser, &mut stdout);
+                if !try_print_ast(&mut parser, &mut stdout) {
+                    return;
+                }
             }
         }
     }
 }
 
-fn print_ast(parser: &mut Rdp<StringInput>, stdout: &mut StdoutLock) {
+fn try_print_ast(parser: &mut Rdp<StringInput>, stdout: &mut StdoutLock) -> bool {
     if parser.top_level_repl() {
         let first = parser.queue().get(0).unwrap();
         match first.rule {
@@ -62,5 +65,13 @@ fn print_ast(parser: &mut Rdp<StringInput>, stdout: &mut StdoutLock) {
             },
             r @ _ => { stdout.write(format!("{:#?}\n", r).as_bytes()); }
         }
+    } else {
+        stdout.write("tsqlust did not expect this input, please report this.\n".as_bytes());
+        assert!(!parser.top_level_repl());
+        stdout.write(format!("Queue:\n{:#?}\n", parser.queue()).as_bytes());
+        stdout.write(format!("Expected:\n{:#?}\n", parser.expected()).as_bytes());
+        return false;
     }
+
+    true
 }
