@@ -7,7 +7,8 @@ use pest::{Parser, StringInput};
 extern crate tsqlust;
 use tsqlust::{Rdp, Rule};
 
-use std::io::{self, BufRead, Write, StdoutLock};
+use std::io::{self, Read, BufRead, Write, StdoutLock};
+use std::fs::File;
 
 fn main() {
     let mut stdin = io::stdin();
@@ -62,5 +63,9 @@ fn print_ast(parser: &mut Rdp<StringInput>, stdout: &mut StdoutLock) {
             },
             r @ _ => { stdout.write(format!("{:#?}\n", r).as_bytes()); }
         }
+    } else {
+        let expected = parser.expected();
+        stdout.write("Unrecognized input. tsqlust is lacking here! Expected:\n".as_bytes());
+        stdout.write(format!("{:#?}\n", expected).as_bytes());
     }
 }
