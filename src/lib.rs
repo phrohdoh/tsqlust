@@ -187,12 +187,12 @@ impl_rdp! {
         }
 
         parse_identifier(&self) -> ast::Node<ast::Identifier> {
-            (identifier: identifier) => {
+            (ident: identifier) => {
                 let input = self.input();
                 ast::Node {
-                    pos: ast::Position::from(input.line_col(identifier.start)),
+                    pos: ast::Position::from(input.line_col(ident.start)),
                     value: ast::Identifier {
-                        value: input.slice(identifier.start, identifier.end).into(),
+                        value: input.slice(ident.start, ident.end).into(),
                     }
                 }
             }
@@ -201,23 +201,14 @@ impl_rdp! {
         parse_column_name_list(&self) -> ast::Node<ast::ColumnNameList> {
             // TODO: Make these functions recurse.
             (pos: column_name_list
-            ,star: tok_star) => {
-                let input = self.input();
+            ,cnl: parse_column_name_list()) => {
                 ast::Node {
-                    pos: ast::Position::from(input.line_col(pos.start)),
-                    value: ast::ColumnNameList {
-                        identifiers: vec![
-                            ast::Node {
-                                pos: ast::Position::from(input.line_col(star.start)),
-                                value: ast::Identifier {
-                                    value: "*".into(),
-                                }
-                            }
-                        ],
-                    }
+                    pos: ast::Position::from((1,1)),
+                    value: cnl.value,
                 }
             },
 
+            /*
             (pos: column_name_list
             ,ident: identifier) => {
                 let input = self.input();
@@ -235,7 +226,73 @@ impl_rdp! {
                     }
                 }
             },
+            */
 
+            (ident_node: parse_identifier()
+            ,_: tok_comma) => {
+                ast::Node {
+                    pos: ident_node.pos,
+                    value: ast::ColumnNameList {
+                        identifiers: vec![
+                            ast::Node {
+                                pos: ident_node.pos,
+                                value: ident_node.value
+                            }
+                        ],
+                    }
+                }
+            },
+
+            (ident_node: parse_identifier()) => {
+                ast::Node {
+                    pos: ident_node.pos,
+                    value: ast::ColumnNameList {
+                        identifiers: vec![
+                            ast::Node {
+                                pos: ident_node.pos,
+                                value: ident_node.value
+                            }
+                        ],
+                    }
+                }
+            },
+
+            (star: tok_star
+            ,_: tok_comma) => {
+                let pos = ast::Position::from(self.input().line_col(star.start));
+                ast::Node {
+                    pos: pos,
+                    value: ast::ColumnNameList {
+                        identifiers: vec![
+                            ast::Node {
+                                pos: pos,
+                                value: ast::Identifier {
+                                    value: "*".into(),
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+
+            (star: tok_star) => {
+                let pos = ast::Position::from(self.input().line_col(star.start));
+                ast::Node {
+                    pos: pos,
+                    value: ast::ColumnNameList {
+                        identifiers: vec![
+                            ast::Node {
+                                pos: pos,
+                                value: ast::Identifier {
+                                    value: "*".into(),
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+
+            /*
             (columns: column_name_list) => {
                 // TODO: Make this entire body more functional.
                 let input = self.input();
@@ -284,6 +341,7 @@ impl_rdp! {
                     }
                 }
             }
+            */
         }
 
         parse_expression(&self) -> ast::Node<ast::Expression> {
