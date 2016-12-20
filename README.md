@@ -21,30 +21,33 @@ See the `tests/` and `examples/` directories.
 
 Example REPL session (start via `cargo run`):
 ```
->> SELECT TOP (5) Id,SomeOtherColumn ,YetAnotherColumn FROM MyTable
+>> SELECT TOP (5) Id FROM MyTable
 Node {
     pos: Position {
         line: 1,
         col: 1
     },
-    value: SelectStatement {
+    tnode: SelectStatement {
         top_statement: Some(
             Node {
                 pos: Position {
                     line: 1,
                     col: 8
                 },
-                value: TopStatement {
-                    top_keyword_pos: Position {
-                        line: 1,
-                        col: 8
+                tnode: TopStatement {
+                    top_keyword: Node {
+                        pos: Position {
+                            line: 1,
+                            col: 8
+                        },
+                        tnode: Top
                     },
                     expr: Node {
                         pos: Position {
                             line: 1,
                             col: 13
                         },
-                        value: Literal {
+                        tnode: Literal {
                             lit: Int(
                                 5
                             )
@@ -56,7 +59,7 @@ Node {
                                 line: 1,
                                 col: 12
                             },
-                            value: ParenOpen
+                            tnode: ParenOpen
                         }
                     ),
                     paren_close: Some(
@@ -65,7 +68,7 @@ Node {
                                 line: 1,
                                 col: 14
                             },
-                            value: ParenClose
+                            tnode: ParenClose
                         }
                     )
                 }
@@ -76,36 +79,27 @@ Node {
                 line: 1,
                 col: 16
             },
-            value: ColumnNameList {
+            tnode: ColumnNameList {
                 identifiers: [
                     Node {
                         pos: Position {
                             line: 1,
                             col: 16
                         },
-                        value: Identifier {
+                        tnode: Identifier {
                             value: "Id"
-                        }
-                    },
-                    Node {
-                        pos: Position {
-                            line: 1,
-                            col: 19
-                        },
-                        value: Identifier {
-                            value: "SomeOtherColumn"
-                        }
-                    },
-                    Node {
-                        pos: Position {
-                            line: 1,
-                            col: 36
-                        },
-                        value: Identifier {
-                            value: "YetAnotherColumn"
                         }
                     }
                 ]
+            }
+        },
+        table_identifier: Node {
+            pos: Position {
+                line: 1,
+                col: 24
+            },
+            tnode: Identifier {
+                value: "MyTable"
             }
         }
     }
