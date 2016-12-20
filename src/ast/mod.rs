@@ -74,6 +74,11 @@ pub enum Expression {
 }
 
 #[derive(PartialEq, Debug)]
+pub enum Keyword {
+    Top
+}
+
+#[derive(PartialEq, Debug)]
 pub enum Token {
     ParenOpen,
     ParenClose,
@@ -82,8 +87,7 @@ pub enum Token {
 #[derive(Debug)]
 /// A [`TOP`](https://msdn.microsoft.com/en-us/library/ms189463.aspx) statement
 pub struct TopStatement {
-    /// TODO: Store this as a Token / Keyword / something other than just a Position
-    pub top_keyword_pos: Position,
+    pub top_keyword: Node<Keyword>,
     pub expr: Node<Expression>,
 
     pub paren_open: Option<Node<Token>>,

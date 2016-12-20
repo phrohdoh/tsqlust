@@ -143,7 +143,10 @@ impl_rdp! {
                 Some(ast::Node {
                     pos: ast::Position::from(input.line_col(pos.start)),
                     tnode: ast::TopStatement {
-                        top_keyword_pos: ast::Position::from(input.line_col(kw.start)),
+                        top_keyword: ast::Node {
+                            pos: ast::Position::from(input.line_col(kw.start)),
+                            tnode: ast::Keyword::Top,
+                        },
                         expr: expr,
                         paren_open: Some(ast::Node {
                             pos: ast::Position::from(input.line_col(paren_open.start)),
@@ -164,7 +167,10 @@ impl_rdp! {
                 Some(ast::Node {
                     pos: ast::Position::from(input.line_col(pos.start)),
                     tnode: ast::TopStatement {
-                        top_keyword_pos: ast::Position::from(input.line_col(kw.start)),
+                        top_keyword: ast::Node {
+                            pos: ast::Position::from(input.line_col(kw.start)),
+                            tnode: ast::Keyword::Top,
+                        },
                         expr: expr,
                         paren_open: None,
                         paren_close: None,
