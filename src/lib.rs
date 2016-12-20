@@ -126,7 +126,7 @@ impl_rdp! {
 
         column_name_list = {
             (tok_star | identifier)
-            ~ (tok_comma ~ (identifier | tok_star))*
+            ~ (tok_comma ~ (tok_star | identifier))*
         }
 
         whitespace = _{ [" "] | ["\t"] | ["\r"] | ["\n"] }
@@ -138,32 +138,40 @@ impl_rdp! {
             ,kw: kw_top
             ,paren_open: tok_paren_open
             ,expr: parse_expression()
-            ,paren_close: tok_paren_close) => Some(ast::Node {
-                pos: ast::Position::from(self.input().line_col(pos.start)),
-                value: ast::TopStatement {
-                    top_keyword_pos: ast::Position::from(self.input().line_col(kw.start)),
-                    expr: expr,
-                    paren_open: Some(ast::Node {
-                        pos: ast::Position::from(self.input().line_col(paren_open.start)),
-                        value: ast::Token::ParenOpen,
-                    }),
-                    paren_close: Some(ast::Node {
-                        pos: ast::Position::from(self.input().line_col(paren_close.start)),
-                        value: ast::Token::ParenClose,
-                    }),
-                }
-            }),
+            ,paren_close: tok_paren_close) => {
+                let input = self.input();
+                Some(ast::Node {
+                    pos: ast::Position::from(input.line_col(pos.start)),
+                    value: ast::TopStatement {
+                        top_keyword_pos: ast::Position::from(input.line_col(kw.start)),
+                        expr: expr,
+                        paren_open: Some(ast::Node {
+                            pos: ast::Position::from(input.line_col(paren_open.start)),
+                            value: ast::Token::ParenOpen,
+                        }),
+                        paren_close: Some(ast::Node {
+                            pos: ast::Position::from(input.line_col(paren_close.start)),
+                            value: ast::Token::ParenClose,
+                        }),
+                    }
+                })
+            },
+
             (pos: stmt_top_legacy
             ,kw: kw_top
-            ,expr: parse_expression()) => Some(ast::Node {
-                pos: ast::Position::from(self.input().line_col(pos.start)),
-                value: ast::TopStatement {
-                    top_keyword_pos: ast::Position::from(self.input().line_col(kw.start)),
-                    expr: expr,
-                    paren_open: None,
-                    paren_close: None,
-                }
-            }),
+            ,expr: parse_expression()) => {
+                let input = self.input();
+                Some(ast::Node {
+                    pos: ast::Position::from(input.line_col(pos.start)),
+                    value: ast::TopStatement {
+                        top_keyword_pos: ast::Position::from(input.line_col(kw.start)),
+                        expr: expr,
+                        paren_open: None,
+                        paren_close: None,
+                    }
+                })
+            },
+
             () => None,
         }
 
@@ -179,19 +187,60 @@ impl_rdp! {
         }
 
         parse_identifier(&self) -> ast::Node<ast::Identifier> {
-            (identifier: identifier) => ast::Node {
-                pos: ast::Position::from(self.input().line_col(identifier.start)),
-                value: ast::Identifier {
-                    value: self.input().slice(identifier.start, identifier.end).into(),
+            (identifier: identifier) => {
+                let input = self.input();
+                ast::Node {
+                    pos: ast::Position::from(input.line_col(identifier.start)),
+                    value: ast::Identifier {
+                        value: input.slice(identifier.start, identifier.end).into(),
+                    }
                 }
             }
         }
 
         parse_column_name_list(&self) -> ast::Node<ast::ColumnNameList> {
+            // TODO: Make these functions recurse.
+            (pos: column_name_list
+            ,star: tok_star) => {
+                let input = self.input();
+                ast::Node {
+                    pos: ast::Position::from(input.line_col(pos.start)),
+                    value: ast::ColumnNameList {
+                        identifiers: vec![
+                            ast::Node {
+                                pos: ast::Position::from(input.line_col(star.start)),
+                                value: ast::Identifier {
+                                    value: "*".into(),
+                                }
+                            }
+                        ],
+                    }
+                }
+            },
+
+            (pos: column_name_list
+            ,ident: identifier) => {
+                let input = self.input();
+                ast::Node {
+                    pos: ast::Position::from(input.line_col(pos.start)),
+                    value: ast::ColumnNameList {
+                        identifiers: vec![
+                            ast::Node {
+                                pos: ast::Position::from(input.line_col(pos.start)),
+                                value: ast::Identifier {
+                                    value: input.slice(ident.start, ident.end).into(),
+                                }
+                            }
+                        ],
+                    }
+                }
+            },
+
             (columns: column_name_list) => {
                 // TODO: Make this entire body more functional.
-                let pos = self.input().line_col(columns.start);
-                let col_str = self.input().slice(columns.start, columns.end);
+                let input = self.input();
+                let pos = input.line_col(columns.start);
+                let col_str = input.slice(columns.start, columns.end);
                 let mut names_and_start_pos = Vec::new();
 
                 let mut in_word = false;
@@ -227,7 +276,7 @@ impl_rdp! {
                     pos: ast::Position::from(pos),
                     value: ast::ColumnNameList {
                         identifiers: names_and_start_pos.into_iter().map(|(n, p)| ast::Node {
-                            pos: ast::Position::from(self.input().line_col(p + columns.start)),
+                            pos: ast::Position::from(input.line_col(p + columns.start)),
                             value: ast::Identifier {
                                 value: n,
                             }
@@ -239,12 +288,11 @@ impl_rdp! {
 
         parse_expression(&self) -> ast::Node<ast::Expression> {
             (v: lit_integer) => {
-                let lit_str = self.input().slice(v.start, v.end);
-
+                let input = self.input();
                 ast::Node {
-                    pos: ast::Position::from(self.input().line_col(v.start)),
+                    pos: ast::Position::from(input.line_col(v.start)),
                     value: ast::Expression::Literal {
-                        lit: ast::Literal::Int(lit_str.parse().unwrap()),
+                        lit: ast::Literal::Int(input.slice(v.start, v.end).parse().unwrap()),
                     }
                 }
             },
@@ -303,9 +351,14 @@ pub fn get_diagnostics_for_tsql(query_string: &str,
     let select_node = parser.parse_stmt_select();
     vis.visit_select_statement(&mut ctx, &select_node);
 
-    if let Some(top_node) = select_node.value.top_statement {
+    let select_node_value = select_node.value;
+
+    if let Some(top_node) = select_node_value.top_statement {
         vis.visit_top_statement(&mut ctx, &top_node);
     }
+
+    let columns_node = select_node_value.column_name_list;
+    vis.visit_column_name_list(&mut ctx, &columns_node);
 
     Ok(ctx.get_diagnostics())
 }
