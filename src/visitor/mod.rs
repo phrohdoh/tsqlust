@@ -30,7 +30,7 @@
 //! }
 //! ```
 
-use ast::{SelectStatement, TopStatement, Node};
+use ast::{SelectStatement, TopStatement, ColumnNameList, Node};
 use diagnostics::Context;
 
 /// The trait that allows walking an AST.
@@ -41,6 +41,7 @@ use diagnostics::Context;
 pub trait Visitor {
     fn visit_select_statement(&mut self, _ctx: &mut Context, _node: &Node<SelectStatement>) {}
     fn visit_top_statement(&mut self, _ctx: &mut Context, _node: &Node<TopStatement>) {}
+    fn visit_column_name_list(&mut self, _ctx: &mut Context, _node: &Node<ColumnNameList>) {}
 }
 
 #[cfg(test)]
