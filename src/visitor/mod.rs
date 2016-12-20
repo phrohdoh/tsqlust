@@ -56,7 +56,7 @@ mod tests {
 
     impl Visitor for TestVisitor {
         fn visit_top_statement(&mut self, ctx: &mut Context, node: &Node<TopStatement>) {
-            let ref stmt = node.value;
+            let ref stmt = node.tnode;
             let ref expr_node = stmt.expr;
 
             if stmt.is_legacy() {
@@ -68,7 +68,7 @@ mod tests {
                 });
             }
 
-            match expr_node.value {
+            match expr_node.tnode {
                 ast::Expression::Literal { lit: ast::Literal::Int(v) } => {
                     if v <= 0 {
                         ctx.add_diagnostic(Diagnostic {

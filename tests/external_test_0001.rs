@@ -11,7 +11,7 @@ struct ExternalConsumer { }
 
 impl Visitor for ExternalConsumer {
     fn visit_select_statement(&mut self, ctx: &mut Context, node: &Node<SelectStatement>) {
-        let ref select_statement = node.value;
+        let ref select_statement = node.tnode;
         if select_statement.top_statement.is_none() {
             ctx.add_diagnostic(Diagnostic {
                 code: "must-have-top".into(),

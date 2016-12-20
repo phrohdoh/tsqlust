@@ -142,16 +142,16 @@ impl_rdp! {
                 let input = self.input();
                 Some(ast::Node {
                     pos: ast::Position::from(input.line_col(pos.start)),
-                    value: ast::TopStatement {
+                    tnode: ast::TopStatement {
                         top_keyword_pos: ast::Position::from(input.line_col(kw.start)),
                         expr: expr,
                         paren_open: Some(ast::Node {
                             pos: ast::Position::from(input.line_col(paren_open.start)),
-                            value: ast::Token::ParenOpen,
+                            tnode: ast::Token::ParenOpen,
                         }),
                         paren_close: Some(ast::Node {
                             pos: ast::Position::from(input.line_col(paren_close.start)),
-                            value: ast::Token::ParenClose,
+                            tnode: ast::Token::ParenClose,
                         }),
                     }
                 })
@@ -163,7 +163,7 @@ impl_rdp! {
                 let input = self.input();
                 Some(ast::Node {
                     pos: ast::Position::from(input.line_col(pos.start)),
-                    value: ast::TopStatement {
+                    tnode: ast::TopStatement {
                         top_keyword_pos: ast::Position::from(input.line_col(kw.start)),
                         expr: expr,
                         paren_open: None,
@@ -180,7 +180,7 @@ impl_rdp! {
             ,kw: kw_create_table
             ,ident: parse_identifier()) => ast::Node {
                 pos: ast::Position::from(self.input().line_col(kw.start)),
-                value: ast::CreateTableStatement {
+                tnode: ast::CreateTableStatement {
                     table_identifier: ident,
                 },
             }
@@ -191,7 +191,7 @@ impl_rdp! {
                 let input = self.input();
                 ast::Node {
                     pos: ast::Position::from(input.line_col(ident.start)),
-                    value: ast::Identifier {
+                    tnode: ast::Identifier {
                         value: input.slice(ident.start, ident.end).into(),
                     }
                 }
@@ -204,7 +204,7 @@ impl_rdp! {
             ,cnl: parse_column_name_list()) => {
                 ast::Node {
                     pos: ast::Position::from(self.input().line_col(pos.start)),
-                    value: cnl.value,
+                    tnode: cnl.tnode,
                 }
             },
 
@@ -233,11 +233,11 @@ impl_rdp! {
                 let pos = ast::Position::from(self.input().line_col(star.start));
                 ast::Node {
                     pos: pos,
-                    value: ast::ColumnNameList {
+                    tnode: ast::ColumnNameList {
                         identifiers: vec![
                             ast::Node {
                                 pos: pos,
-                                value: ast::Identifier {
+                                tnode: ast::Identifier {
                                     value: "*".into(),
                                 }
                             }
@@ -250,11 +250,11 @@ impl_rdp! {
                 let pos = ast::Position::from(self.input().line_col(star.start));
                 ast::Node {
                     pos: pos,
-                    value: ast::ColumnNameList {
+                    tnode: ast::ColumnNameList {
                         identifiers: vec![
                             ast::Node {
                                 pos: pos,
-                                value: ast::Identifier {
+                                tnode: ast::Identifier {
                                     value: "*".into(),
                                 }
                             }
@@ -267,11 +267,11 @@ impl_rdp! {
             ,_: tok_comma) => {
                 ast::Node {
                     pos: ident_node.pos,
-                    value: ast::ColumnNameList {
+                    tnode: ast::ColumnNameList {
                         identifiers: vec![
                             ast::Node {
                                 pos: ident_node.pos,
-                                value: ident_node.value
+                                tnode: ident_node.tnode
                             }
                         ],
                     }
@@ -281,11 +281,11 @@ impl_rdp! {
             (ident_node: parse_identifier()) => {
                 ast::Node {
                     pos: ident_node.pos,
-                    value: ast::ColumnNameList {
+                    tnode: ast::ColumnNameList {
                         identifiers: vec![
                             ast::Node {
                                 pos: ident_node.pos,
-                                value: ident_node.value
+                                tnode: ident_node.tnode
                             }
                         ],
                     }
@@ -349,14 +349,14 @@ impl_rdp! {
                 let input = self.input();
                 ast::Node {
                     pos: ast::Position::from(input.line_col(v.start)),
-                    value: ast::Expression::Literal {
+                    tnode: ast::Expression::Literal {
                         lit: ast::Literal::Int(input.slice(v.start, v.end).parse().unwrap()),
                     }
                 }
             },
             (pos: expr, lit: parse_literal()) => ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
-                value: ast::Expression::Literal {
+                tnode: ast::Expression::Literal {
                     lit: lit
                 }
             }
@@ -376,7 +376,7 @@ impl_rdp! {
             ,table_ident: parse_identifier()
             ) => ast::Node {
                 pos: ast::Position::from(self.input().line_col(pos.start)),
-                value: ast::SelectStatement {
+                tnode: ast::SelectStatement {
                     top_statement: stmt_top,
                     column_name_list: columns,
                     table_identifier: table_ident,
@@ -409,13 +409,13 @@ pub fn get_diagnostics_for_tsql(query_string: &str,
     let select_node = parser.parse_stmt_select();
     vis.visit_select_statement(&mut ctx, &select_node);
 
-    let select_node_value = select_node.value;
+    let select_node_node = select_node.tnode;
 
-    if let Some(top_node) = select_node_value.top_statement {
+    if let Some(top_node) = select_node_node.top_statement {
         vis.visit_top_statement(&mut ctx, &top_node);
     }
 
-    let columns_node = select_node_value.column_name_list;
+    let columns_node = select_node_node.column_name_list;
     vis.visit_column_name_list(&mut ctx, &columns_node);
 
     Ok(ctx.get_diagnostics())
@@ -435,10 +435,10 @@ mod tests {
         assert!(parser.column_name_list());
 
         let ident = parser.parse_column_name_list()
-            .value
+            .tnode
             .identifiers
             .into_iter()
-            .map(|idt_node| idt_node.value.value)
+            .map(|idt_node| idt_node.tnode.value)
             .collect::<Vec<String>>();
         assert_eq!(ident, vec!["*"]);
     }
@@ -449,10 +449,10 @@ mod tests {
         assert!(parser.column_name_list());
 
         let idents = parser.parse_column_name_list()
-            .value
+            .tnode
             .identifiers
             .into_iter()
-            .map(|idt_node| idt_node.value.value)
+            .map(|idt_node| idt_node.tnode.value)
             .collect::<Vec<String>>();
         assert_eq!(idents,
                    vec!["Id", "SomeColumn", "ColumnA", "ColumnB", "Foo", "Qux"]);
@@ -466,15 +466,15 @@ mod tests {
         let stmt_select = parser.parse_stmt_select();
         assert_eq!(stmt_select.pos.to_pair(), (1, 1));
 
-        let select_value = stmt_select.value;
-        let top = select_value.top_statement.unwrap();
+        let select_node = stmt_select.tnode;
+        let top = select_node.top_statement.unwrap();
         assert_eq!(top.pos.to_pair(), (1, 8));
 
-        let top_value = top.value;
-        assert!(!top_value.is_legacy());
+        let top_node = top.tnode;
+        assert!(!top_node.is_legacy());
 
-        let top_expr_value = top_value.expr.value;
-        assert_eq!(top_expr_value,
+        let top_expr_node = top_node.expr.tnode;
+        assert_eq!(top_expr_node,
                    ast::Expression::Literal { lit: ast::Literal::Int(10) });
     }
 
@@ -483,7 +483,7 @@ mod tests {
         let mut parser = Rdp::new(StringInput::new("SELECT TOP 10 * FROM MyTable"));
         assert!(parser.tsql());
 
-        let stmt_select = parser.parse_stmt_select().value;
+        let stmt_select = parser.parse_stmt_select().tnode;
         assert!(stmt_select.top_statement.is_some());
     }
 
@@ -501,10 +501,10 @@ mod tests {
         let mut parser = Rdp::new(StringInput::new("TOP (972)"));
         assert!(parser.stmt_top());
 
-        let stmt_top = parser.parse_stmt_top().unwrap().value;
+        let stmt_top = parser.parse_stmt_top().unwrap().tnode;
         assert!(!stmt_top.is_legacy());
 
-        assert_eq!(stmt_top.expr.value,
+        assert_eq!(stmt_top.expr.tnode,
                    ast::Expression::Literal { lit: ast::Literal::Int(972) });
     }
 }

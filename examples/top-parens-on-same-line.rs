@@ -16,7 +16,7 @@ struct ExampleVisitor { }
 
 impl Visitor for ExampleVisitor {
     fn visit_top_statement(&mut self, ctx: &mut Context, node: &Node<TopStatement>) {
-        let ref top_statement = node.value;
+        let ref top_statement = node.tnode;
         if top_statement.is_legacy() {
             return;
         }

@@ -32,8 +32,15 @@ impl From<(usize, usize)> for Position {
 
 #[derive(Debug)]
 pub struct Node<TNode> {
+    /// Position in the AST
+    ///
+    /// This is useful for error reporting.
     pub pos: Position,
-    pub value: TNode,
+
+    /// The actual node in the tree.
+    ///
+    /// For example: `SelectStatement`, `CreateTableStatement`, etc.
+    pub tnode: TNode,
 }
 
 #[derive(Debug)]
