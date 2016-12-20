@@ -203,7 +203,7 @@ impl_rdp! {
             (pos: column_name_list
             ,cnl: parse_column_name_list()) => {
                 ast::Node {
-                    pos: ast::Position::from((1,1)),
+                    pos: ast::Position::from(self.input().line_col(pos.start)),
                     value: cnl.value,
                 }
             },
