@@ -228,35 +228,6 @@ impl_rdp! {
             },
             */
 
-            (ident_node: parse_identifier()
-            ,_: tok_comma) => {
-                ast::Node {
-                    pos: ident_node.pos,
-                    value: ast::ColumnNameList {
-                        identifiers: vec![
-                            ast::Node {
-                                pos: ident_node.pos,
-                                value: ident_node.value
-                            }
-                        ],
-                    }
-                }
-            },
-
-            (ident_node: parse_identifier()) => {
-                ast::Node {
-                    pos: ident_node.pos,
-                    value: ast::ColumnNameList {
-                        identifiers: vec![
-                            ast::Node {
-                                pos: ident_node.pos,
-                                value: ident_node.value
-                            }
-                        ],
-                    }
-                }
-            },
-
             (star: tok_star
             ,_: tok_comma) => {
                 let pos = ast::Position::from(self.input().line_col(star.start));
@@ -288,6 +259,35 @@ impl_rdp! {
                                 }
                             }
                         ]
+                    }
+                }
+            },
+
+            (ident_node: parse_identifier()
+            ,_: tok_comma) => {
+                ast::Node {
+                    pos: ident_node.pos,
+                    value: ast::ColumnNameList {
+                        identifiers: vec![
+                            ast::Node {
+                                pos: ident_node.pos,
+                                value: ident_node.value
+                            }
+                        ],
+                    }
+                }
+            },
+
+            (ident_node: parse_identifier()) => {
+                ast::Node {
+                    pos: ident_node.pos,
+                    value: ast::ColumnNameList {
+                        identifiers: vec![
+                            ast::Node {
+                                pos: ident_node.pos,
+                                value: ident_node.value
+                            }
+                        ],
                     }
                 }
             },
