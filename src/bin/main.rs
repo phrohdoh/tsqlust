@@ -20,6 +20,7 @@ fn main() {
     stdout.write(b"Enter q at any time to quit.\n");
     stdout.write(b"Enter ? at any time for help.\n");
     stdout.write(b"Note: Expressions cannot be parsed currently. See https://github.com/Phrohdoh/tsqlust/issues/13\n");
+    stdout.write(b"Note: SELECTs must consist only of a single column name. See https://github.com/Phrohdoh/tsqlust/issues/16\n");
     stdout.write(b"\n");
 
     loop {
