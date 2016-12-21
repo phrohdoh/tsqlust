@@ -239,14 +239,14 @@ impl_rdp! {
             ,cnl_node: parse_column_name_list()) => {
                 let pos = ast::Position::from(self.input().line_col(star.start));
                 let mut nodes = cnl_node.tnode.identifiers;
-                nodes.append(&mut vec![
+                nodes.insert(0,
                     ast::Node {
                         pos: pos,
                         tnode: ast::Identifier {
                             value: "*".into(),
                         }
                     }
-                ]);
+                );
 
                 ast::Node {
                     pos: pos,
@@ -277,12 +277,8 @@ impl_rdp! {
             ,_: tok_comma
             ,cnl_node: parse_column_name_list()) => {
                 let pos = ident_node.pos;
-                let mut following_nodes = cnl_node.tnode.identifiers;
-                let nodes = {
-                    let mut v = vec![ ident_node ];
-                    v.append(&mut following_nodes);
-                    v
-                };
+                let mut nodes = cnl_node.tnode.identifiers;
+                nodes.insert(0, ident_node);
 
                 ast::Node {
                     pos: pos,
