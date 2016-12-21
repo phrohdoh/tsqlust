@@ -21,7 +21,7 @@ See the `tests/` and `examples/` directories.
 
 Example REPL session (start via `cargo run`):
 ```
->> SELECT TOP (5) Id FROM MyTable
+>> SELECT TOP (5) Id,FirstName,   LastName   ,* FROM MyTable
 Node {
     pos: Position {
         line: 1,
@@ -89,6 +89,33 @@ Node {
                         tnode: Identifier {
                             value: "Id"
                         }
+                    },
+                    Node {
+                        pos: Position {
+                            line: 1,
+                            col: 19
+                        },
+                        tnode: Identifier {
+                            value: "FirstName"
+                        }
+                    },
+                    Node {
+                        pos: Position {
+                            line: 1,
+                            col: 32
+                        },
+                        tnode: Identifier {
+                            value: "LastName"
+                        }
+                    },
+                    Node {
+                        pos: Position {
+                            line: 1,
+                            col: 44
+                        },
+                        tnode: Identifier {
+                            value: "*"
+                        }
                     }
                 ]
             }
@@ -96,7 +123,7 @@ Node {
         table_identifier: Node {
             pos: Position {
                 line: 1,
-                col: 24
+                col: 51
             },
             tnode: Identifier {
                 value: "MyTable"
