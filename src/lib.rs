@@ -359,6 +359,18 @@ pub fn get_diagnostics_for_tsql(query_string: &str,
     Ok(ctx.get_diagnostics())
 }
 
+/// This is a temporary function used by the WIP graphical interface.
+/// You should not rely on it or expect it to exist in any following versions.
+pub fn parse_tsql_select(tsql: &str) -> Result<ast::Node<ast::SelectStatement>, String> {
+    let mut parser = Rdp::new(StringInput::new(tsql));
+
+    if !parser.stmt_select() {
+        return Err("Failed to parse SELECT statement.".into());
+    }
+
+    Ok(parser.parse_stmt_select())
+}
+
 #[cfg(test)]
 mod tests {
     #[allow(unused_imports)]
