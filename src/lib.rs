@@ -206,10 +206,10 @@ impl_rdp! {
 
         parse_column_name_list(&self) -> ast::Node<ast::ColumnNameList> {
             (pos: column_name_list
-            ,cnl: parse_column_name_list()) => {
+            ,cnl_node: parse_column_name_list()) => {
                 ast::Node {
                     pos: ast::Position::from(self.input().line_col(pos.start)),
-                    tnode: cnl.tnode,
+                    tnode: cnl_node.tnode,
                 }
             },
 
