@@ -235,19 +235,23 @@ impl_rdp! {
             */
 
             (star: tok_star
-            ,_: tok_comma) => {
+            ,_: tok_comma
+            ,cnl_node: parse_column_name_list()) => {
                 let pos = ast::Position::from(self.input().line_col(star.start));
+                let mut nodes = cnl_node.tnode.identifiers;
+                nodes.append(&mut vec![
+                    ast::Node {
+                        pos: pos,
+                        tnode: ast::Identifier {
+                            value: "*".into(),
+                        }
+                    }
+                ]);
+
                 ast::Node {
                     pos: pos,
                     tnode: ast::ColumnNameList {
-                        identifiers: vec![
-                            ast::Node {
-                                pos: pos,
-                                tnode: ast::Identifier {
-                                    value: "*".into(),
-                                }
-                            }
-                        ]
+                        identifiers: nodes,
                     }
                 }
             },
@@ -270,16 +274,20 @@ impl_rdp! {
             },
 
             (ident_node: parse_identifier()
-            ,_: tok_comma) => {
+            ,_: tok_comma
+            ,cnl_node: parse_column_name_list()) => {
+                let pos = ident_node.pos;
+                let mut following_nodes = cnl_node.tnode.identifiers;
+                let nodes = {
+                    let mut v = vec![ ident_node ];
+                    v.append(&mut following_nodes);
+                    v
+                };
+
                 ast::Node {
-                    pos: ident_node.pos,
+                    pos: pos,
                     tnode: ast::ColumnNameList {
-                        identifiers: vec![
-                            ast::Node {
-                                pos: ident_node.pos,
-                                tnode: ident_node.tnode
-                            }
-                        ],
+                        identifiers: nodes,
                     }
                 }
             },
