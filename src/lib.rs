@@ -205,7 +205,6 @@ impl_rdp! {
         }
 
         parse_column_name_list(&self) -> ast::Node<ast::ColumnNameList> {
-            // TODO: Make these functions recurse.
             (pos: column_name_list
             ,cnl: parse_column_name_list()) => {
                 ast::Node {
@@ -213,26 +212,6 @@ impl_rdp! {
                     tnode: cnl.tnode,
                 }
             },
-
-            /*
-            (pos: column_name_list
-            ,ident: identifier) => {
-                let input = self.input();
-                ast::Node {
-                    pos: ast::Position::from(input.line_col(pos.start)),
-                    value: ast::ColumnNameList {
-                        identifiers: vec![
-                            ast::Node {
-                                pos: ast::Position::from(input.line_col(pos.start)),
-                                value: ast::Identifier {
-                                    value: input.slice(ident.start, ident.end).into(),
-                                }
-                            }
-                        ],
-                    }
-                }
-            },
-            */
 
             (star: tok_star
             ,_: tok_comma
@@ -301,57 +280,6 @@ impl_rdp! {
                     }
                 }
             },
-
-            /*
-            (columns: column_name_list) => {
-                // TODO: Make this entire body more functional.
-                let input = self.input();
-                let pos = input.line_col(columns.start);
-                let col_str = input.slice(columns.start, columns.end);
-                let mut names_and_start_pos = Vec::new();
-
-                let mut in_word = false;
-                let mut word = String::new();
-                let mut start_pos = 0usize;
-
-                let len = col_str.len();
-                for (pos, ch) in col_str.char_indices() {
-                    if ch.is_whitespace() {
-                        continue;
-                    }
-
-                    if ch == ',' {
-                        in_word = false;
-                        names_and_start_pos.push((word, start_pos));
-                        start_pos = 0usize;
-                        word = String::new();
-                    } else if pos + ch.len_utf8() == len {
-                        in_word = false;
-                        word.push(ch);
-                        names_and_start_pos.push((word, start_pos));
-                        word = String::new();
-                    } else if in_word {
-                        word.push(ch);
-                    } else {
-                        in_word = true;
-                        start_pos = pos;
-                        word.push(ch);
-                    }
-                }
-
-                ast::Node {
-                    pos: ast::Position::from(pos),
-                    value: ast::ColumnNameList {
-                        identifiers: names_and_start_pos.into_iter().map(|(n, p)| ast::Node {
-                            pos: ast::Position::from(input.line_col(p + columns.start)),
-                            value: ast::Identifier {
-                                value: n,
-                            }
-                        }).collect(),
-                    }
-                }
-            }
-            */
         }
 
         parse_expression(&self) -> ast::Node<ast::Expression> {
