@@ -30,7 +30,7 @@ impl From<(usize, usize)> for Position {
     }
 }
 
-#[derive(Debug, Serialize)]
+#[derive(PartialEq, Debug, Serialize)]
 pub struct Node<TNode> {
     /// Position in the AST
     ///
@@ -43,7 +43,7 @@ pub struct Node<TNode> {
     pub tnode: TNode,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(PartialEq, Debug, Serialize)]
 /// A [`SELECT`](https://msdn.microsoft.com/en-us/library/ms189499.aspx) statement
 pub struct SelectStatement {
     pub top_statement: Option<Node<TopStatement>>,
@@ -84,7 +84,7 @@ pub enum Token {
     ParenClose,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(PartialEq, Debug, Serialize)]
 /// A [`TOP`](https://msdn.microsoft.com/en-us/library/ms189463.aspx) statement
 pub struct TopStatement {
     pub top_keyword: Node<Keyword>,
@@ -110,12 +110,12 @@ impl TopStatement {
     }
 }
 
-#[derive(Debug, Serialize)]
+#[derive(PartialEq, Debug, Serialize)]
 pub struct ColumnNameList {
     pub identifiers: Vec<Node<Identifier>>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(PartialEq, Debug, Serialize)]
 pub struct CreateTableStatement {
     pub table_identifier: Node<Identifier>,
 }
