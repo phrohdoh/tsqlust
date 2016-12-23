@@ -1,6 +1,10 @@
 // tsqlust -- GPLv3 T-SQL static analysis framework
 // Copyright (C) 2016 Taryn Hill
 
+use serde_json;
+
+pub use serde_json::error::Result;
+
 #[derive(PartialEq, Copy, Clone, Debug, Serialize)]
 pub struct Position {
     pub line: usize,
@@ -49,6 +53,16 @@ pub struct SelectStatement {
     pub top_statement: Option<Node<TopStatement>>,
     pub column_name_list: Node<ColumnNameList>,
     pub table_identifier: Node<Identifier>,
+}
+
+impl SelectStatement {
+    pub fn to_json(&self) -> Result<String> {
+        serde_json::to_string(self)
+    }
+
+    pub fn to_json_pretty(&self) -> Result<String> {
+        serde_json::to_string_pretty(self)
+    }
 }
 
 #[derive(PartialEq, Debug, Serialize)]

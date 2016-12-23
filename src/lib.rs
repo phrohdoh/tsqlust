@@ -506,4 +506,16 @@ mod tests {
         assert_eq!(stmt_top.expr.tnode,
                    Expression::Literal { lit: Literal::Int(972) });
     }
+
+    #[test]
+    fn select_to_json() {
+        let mut parser = Rdp::new(StringInput::new("SELECT * FROM MyTable"));
+        assert!(parser.stmt_select());
+
+        let select_node = parser.parse_stmt_select().tnode;
+        let found = select_node.to_json().unwrap();
+        let expected = r#"{"top_statement":null,"column_name_list":{"pos":{"line":1,"col":8},"tnode":{"identifiers":[{"pos":{"line":1,"col":8},"tnode":{"value":"*"}}]}},"table_identifier":{"pos":{"line":1,"col":15},"tnode":{"value":"MyTable"}}}"#;
+
+        assert_eq!(found, expected);
+    }
 }
