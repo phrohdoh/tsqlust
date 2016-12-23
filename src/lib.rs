@@ -454,7 +454,7 @@ mod tests {
 
         let top_expr_node = top_node.expr.tnode;
         assert_eq!(top_expr_node,
-                   ast::Expression::Literal { lit: ast::Literal::Int(10) });
+                   Expression::Literal { lit: Literal::Int(10) });
 
         let column_idents = select_node.column_name_list.tnode.identifiers;
         assert_eq!(column_idents, vec![
@@ -497,6 +497,6 @@ mod tests {
         assert!(!stmt_top.is_legacy());
 
         assert_eq!(stmt_top.expr.tnode,
-                   ast::Expression::Literal { lit: ast::Literal::Int(972) });
+                   Expression::Literal { lit: Literal::Int(972) });
     }
 }
