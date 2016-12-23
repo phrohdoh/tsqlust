@@ -2,9 +2,16 @@
 // Copyright (C) 2016 Taryn Hill
 
 #![recursion_limit = "100"]
+#![feature(proc_macro)]
 
 #[macro_use]
 extern crate pest;
+
+extern crate serde;
+extern crate serde_json;
+
+#[macro_use]
+extern crate serde_derive;
 
 use pest::{StringInput, Parser};
 use pest::prelude::{Token, Input};

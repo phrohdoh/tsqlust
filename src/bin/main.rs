@@ -9,6 +9,9 @@ use pest::{Parser, StringInput};
 extern crate tsqlust;
 use tsqlust::{Rdp, Rule};
 
+extern crate serde;
+extern crate serde_json;
+
 use std::io::{self, BufRead, Write, StdoutLock};
 
 fn main() {
@@ -63,7 +66,9 @@ fn try_print_ast(parser: &mut Rdp<StringInput>, stdout: &mut StdoutLock) -> bool
         let first = parser.queue().get(0).unwrap();
         match first.rule {
             Rule::stmt_select => {
-                stdout.write(format!("{:#?}\n", parser.parse_stmt_select()).as_bytes());
+                let select_node = parser.parse_stmt_select();
+                let json = serde_json::to_string_pretty(&select_node).unwrap() + "\n";
+                stdout.write(json.as_bytes());
             }
             Rule::stmt_top_legacy
             | Rule::stmt_top => {

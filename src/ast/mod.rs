@@ -1,7 +1,7 @@
 // tsqlust -- GPLv3 T-SQL static analysis framework
 // Copyright (C) 2016 Taryn Hill
 
-#[derive(PartialEq, Copy, Clone, Debug)]
+#[derive(PartialEq, Copy, Clone, Debug, Serialize)]
 pub struct Position {
     pub line: usize,
     pub col: usize,
@@ -30,7 +30,7 @@ impl From<(usize, usize)> for Position {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Node<TNode> {
     /// Position in the AST
     ///
@@ -43,7 +43,7 @@ pub struct Node<TNode> {
     pub tnode: TNode,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 /// A [`SELECT`](https://msdn.microsoft.com/en-us/library/ms189499.aspx) statement
 pub struct SelectStatement {
     pub top_statement: Option<Node<TopStatement>>,
@@ -51,7 +51,7 @@ pub struct SelectStatement {
     pub table_identifier: Node<Identifier>,
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Serialize)]
 /// Represents a literal value (not a variable) found in the query source.
 pub enum Literal {
     Bool(bool),
@@ -60,31 +60,31 @@ pub enum Literal {
     Str(String),
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Serialize)]
 /// A table or column name
 pub struct Identifier {
     pub value: String,
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Serialize)]
 pub enum Expression {
     Literal {
         lit: Literal,
     },
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Serialize)]
 pub enum Keyword {
     Top
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Serialize)]
 pub enum Token {
     ParenOpen,
     ParenClose,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 /// A [`TOP`](https://msdn.microsoft.com/en-us/library/ms189463.aspx) statement
 pub struct TopStatement {
     pub top_keyword: Node<Keyword>,
@@ -110,12 +110,12 @@ impl TopStatement {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct ColumnNameList {
     pub identifiers: Vec<Node<Identifier>>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct CreateTableStatement {
     pub table_identifier: Node<Identifier>,
 }

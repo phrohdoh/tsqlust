@@ -11,6 +11,9 @@ keywords = ["tsql", "sql", "static analysis"]
 
 [dependencies]
 pest = "0.4.0"
+serde = "0.8"
+serde_json = "0.8"
+serde_derive = "0.8"
 
 [dev-dependencies]
 chrono = "0.2.25"
