@@ -379,33 +379,62 @@ mod tests {
     #[allow(unused_imports)]
     use pest::Parser;
 
+    use ast::*;
+
     #[test]
     fn column_name_list_star() {
         let mut parser = Rdp::new(StringInput::new("*"));
         assert!(parser.column_name_list());
 
-        let ident = parser.parse_column_name_list()
-            .tnode
-            .identifiers
-            .into_iter()
-            .map(|idt_node| idt_node.tnode.value)
-            .collect::<Vec<String>>();
-        assert_eq!(ident, vec!["*"]);
+        let found = parser.parse_column_name_list().tnode.identifiers;
+
+        let expected = vec![
+            Node {
+                pos: Position { line: 1, col: 1 },
+                tnode: Identifier { value: "*".into() },
+            }
+        ];
+
+        assert_eq!(found, expected);
     }
 
     #[test]
     fn column_name_list_identifiers() {
-        let mut parser = Rdp::new(StringInput::new("Id,SomeColumn,ColumnA,  ColumnB,  Foo  ,Qux"));
+        let mut parser = Rdp::new(StringInput::new(r#"Id,SomeColumn
+        ,ColumnA,  ColumnB
+        ,  Foo  ,Qux"#));
         assert!(parser.column_name_list());
 
-        let idents = parser.parse_column_name_list()
-            .tnode
-            .identifiers
-            .into_iter()
-            .map(|idt_node| idt_node.tnode.value)
-            .collect::<Vec<String>>();
-        assert_eq!(idents,
-                   vec!["Id", "SomeColumn", "ColumnA", "ColumnB", "Foo", "Qux"]);
+        let found = parser.parse_column_name_list().tnode.identifiers;
+
+        let expected = vec![
+            Node {
+                pos: Position { line: 1, col: 1 },
+                tnode: Identifier { value: "Id".into() },
+            },
+            Node {
+                pos: Position { line: 1, col: 4 },
+                tnode: Identifier { value: "SomeColumn".into() },
+            },
+            Node {
+                pos: Position { line: 2, col: 10 },
+                tnode: Identifier { value: "ColumnA".into() },
+            },
+            Node {
+                pos: Position { line: 2, col: 20 },
+                tnode: Identifier { value: "ColumnB".into() },
+            },
+            Node {
+                pos: Position { line: 3, col: 12 },
+                tnode: Identifier { value: "Foo".into() },
+            },
+            Node {
+                pos: Position { line: 3, col: 18 },
+                tnode: Identifier { value: "Qux".into() },
+            }
+        ];
+
+        assert_eq!(expected, found);
     }
 
     #[test]
@@ -426,6 +455,19 @@ mod tests {
         let top_expr_node = top_node.expr.tnode;
         assert_eq!(top_expr_node,
                    ast::Expression::Literal { lit: ast::Literal::Int(10) });
+
+        let column_idents = select_node.column_name_list.tnode.identifiers;
+        assert_eq!(column_idents, vec![
+            Node {
+                pos: Position {
+                    line: 1,
+                    col: 17,
+                },
+                tnode: Identifier {
+                    value: "*".into(),
+                }
+            }
+        ]);
     }
 
     #[test]
