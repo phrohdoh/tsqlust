@@ -120,6 +120,12 @@ impl_rdp! {
         kw_and = { [i"AND"] }
         kw_not = { [i"NOT"] }
 
+        column_type_name = {
+            kw_varchar
+        }
+
+        kw_varchar = { [i"VARCHAR"] }
+
         pred_cmp = { expr ~ op_cmp ~ expr }
 
         clause_where = { kw_where ~ pred_cmp }
@@ -127,6 +133,11 @@ impl_rdp! {
         column_name_list = {
             (tok_star | identifier)
             ~ (tok_comma ~ (tok_star | identifier))*
+        }
+
+        table_item_definition = {
+            identifier ~ column_type_name
+            ~ (tok_comma ~ identifier ~ column_type_name)*
         }
 
         whitespace = _{ [" "] | ["\t"] | ["\r"] | ["\n"] }
@@ -181,10 +192,37 @@ impl_rdp! {
             () => None,
         }
 
+        parse_table_item_definition(&self) -> ast::Node<ast::TableItemDefinition> {
+            (pos: table_item_definition
+            ,ident: parse_identifier()
+            ,ty: parse_identifier() /*column_type_name*/) => {
+                let input = self.input();
+                ast::Node {
+                    pos: ast::Position::from(input.line_col(pos.start)),
+                    tnode: ast::TableItemDefinition {
+                        identifier: ident,
+                        type_name: ty
+                    }
+                }
+            }
+
+            (_: tok_comma
+            ,ident: parse_identifier()
+            ,ty: parse_identifier()) => {
+                let input = self.input();
+                pos: ident.pos,
+                tnode: ast::TableItemDefinition {
+                    identifier: ident,
+                    type_name: ty
+                }
+            }
+        }
+
         parse_stmt_create_table(&self) -> ast::Node<ast::CreateTableStatement> {
             (_: stmt_create_table
             ,kw: kw_create_table
-            ,ident: parse_identifier()) => ast::Node {
+            ,ident: parse_identifier()
+            ,item) => ast::Node {
                 pos: ast::Position::from(self.input().line_col(kw.start)),
                 tnode: ast::CreateTableStatement {
                     table_identifier: ident,

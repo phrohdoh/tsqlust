@@ -119,3 +119,19 @@ pub struct ColumnNameList {
 pub struct CreateTableStatement {
     pub table_identifier: Node<Identifier>,
 }
+
+#[derive(Debug)]
+pub struct TableItemDefinition {
+    pub identifier: Node<Identifier>,
+
+    // TODO: enum TableItemType { Int, Varchar, Decimal, ..., UserDefined(String) }
+    pub type_name: Node<Identifier>,
+
+    // TODO: Constraints.
+}
+
+#[derive(Debug)]
+pub struct TableDefinitionGroup {
+    pub paren_open: Token,
+    pub paren_close: Token,
+}
