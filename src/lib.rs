@@ -204,18 +204,20 @@ impl_rdp! {
                         type_name: ty
                     }
                 }
-            }
+            },
 
             (_: tok_comma
             ,ident: parse_identifier()
             ,ty: parse_identifier()) => {
                 let input = self.input();
-                pos: ident.pos,
-                tnode: ast::TableItemDefinition {
-                    identifier: ident,
-                    type_name: ty
+                ast::Node {
+                    pos: ident.pos,
+                    tnode: ast::TableItemDefinition {
+                        identifier: ident,
+                        type_name: ty
+                    }
                 }
-            }
+            },
         }
 
         parse_stmt_create_table(&self) -> ast::Node<ast::CreateTableStatement> {
