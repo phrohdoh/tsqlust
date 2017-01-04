@@ -6,7 +6,7 @@
 
 ## Project Goals
 
-> Provide developers with the ability to statically verify and analyze T-SQL queries
+> Provide developers human-friendly messages, errors and warnings when writing sql queries.
 
 How this is done:
 
@@ -14,6 +14,10 @@ How this is done:
 2. You will implement the provided `Visitor` trait
 3. Invoke `tsqlust::get_diagnostics_for_tsql(&your_sql)`
 4. Iterate over the resulting `Vec<tsqlust::diagnostics::Diagnostic>` and take action
+
+## Current State of Project
+
+> Currently the project only lexes and parses a query up to a WHERE statement
 
 ## Usage
 
