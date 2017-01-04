@@ -6,16 +6,16 @@
 
 ## Project Goals
 
-> Provide developers human-friendly messages, errors and warnings when writing tsql queries.
+> Provide human-friendly errors, warnings, and messages when writing tsql queries
 
 How this is done:
 
 1. Create an AST from input (typically from a file)
-2. You will implement the provided `Visitor` trait
-3. Invoke `tsqlust::get_diagnostics_for_tsql(&your_sql)`
+2. You will implement the provided [`Visitor`](https://phrohdoh.github.io/tsqlust/tsqlust/visitor/trait.Visitor.html) trait
+3. Invoke `tsqlust::get_diagnostics_for_tsql(&your_sql_str)`
 4. Iterate over the resulting `Vec<tsqlust::diagnostics::Diagnostic>` and take action
 
-## Current State of Project
+## Project Status
 
 > Currently the project only lexes and parses a basic query
 
