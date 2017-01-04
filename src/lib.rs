@@ -373,8 +373,8 @@ pub fn parse_tsql_select(tsql: &str) -> Result<ast::Node<ast::SelectStatement>, 
 
 #[cfg(test)]
 mod tests {
-    use super::{Rdp, ast};
-    use pest::{Parser, StringInput};
+    use super::Rdp;
+    use pest::StringInput;
     use ast::*;
 
     #[test]
