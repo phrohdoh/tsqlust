@@ -6,7 +6,7 @@
 
 ## Project Goals
 
-> Provide developers human-friendly messages, errors and warnings when writing sql queries.
+> Provide developers human-friendly messages, errors and warnings when writing tsql queries.
 
 How this is done:
 
@@ -17,7 +17,7 @@ How this is done:
 
 ## Current State of Project
 
-> Currently the project only lexes and parses a query up to a WHERE statement
+> Currently the project only lexes and parses a basic query
 
 ## Usage
 
