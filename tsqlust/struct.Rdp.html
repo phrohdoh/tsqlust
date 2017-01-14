@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Rdp` struct in crate `tsqlust`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Rdp">
+
+    <title>tsqlust::Rdp - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>tsqlust</a></p><script>window.sidebarCurrent = {name: 'Rdp', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>tsqlust</a>::<wbr><a class='struct' href=''>Rdp</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span></span></h1>
+<pre class='rust struct'>pub struct Rdp&lt;T&gt; { /* fields omitted */ }</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'input, T:&nbsp;<a class='trait' href='../pest/input/trait.Input.html' title='pest::input::Input'>Input</a>&lt;'input&gt;&gt; <a class='struct' href='../tsqlust/struct.Rdp.html' title='tsqlust::Rdp'>Rdp</a>&lt;T&gt;</code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(input: T) -&gt; <a class='struct' href='../tsqlust/struct.Rdp.html' title='tsqlust::Rdp'>Rdp</a>&lt;T&gt;</code></span></h4>
+<h4 id='method.comment' class='method'><span id='comment.v' class='invisible'><code>fn <a href='#method.comment' class='fnname'>comment</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.any' class='method'><span id='any.v' class='invisible'><code>fn <a href='#method.any' class='fnname'>any</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.soi' class='method'><span id='soi.v' class='invisible'><code>fn <a href='#method.soi' class='fnname'>soi</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.eoi' class='method'><span id='eoi.v' class='invisible'><code>fn <a href='#method.eoi' class='fnname'>eoi</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tsql' class='method'><span id='tsql.v' class='invisible'><code>fn <a href='#method.tsql' class='fnname'>tsql</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.stmt_top_legacy' class='method'><span id='stmt_top_legacy.v' class='invisible'><code>fn <a href='#method.stmt_top_legacy' class='fnname'>stmt_top_legacy</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.stmt_top' class='method'><span id='stmt_top.v' class='invisible'><code>fn <a href='#method.stmt_top' class='fnname'>stmt_top</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.stmt_select' class='method'><span id='stmt_select.v' class='invisible'><code>fn <a href='#method.stmt_select' class='fnname'>stmt_select</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.stmt_create_table' class='method'><span id='stmt_create_table.v' class='invisible'><code>fn <a href='#method.stmt_create_table' class='fnname'>stmt_create_table</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.top_level_repl' class='method'><span id='top_level_repl.v' class='invisible'><code>fn <a href='#method.top_level_repl' class='fnname'>top_level_repl</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.expr' class='method'><span id='expr.v' class='invisible'><code>fn <a href='#method.expr' class='fnname'>expr</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.lit_bool' class='method'><span id='lit_bool.v' class='invisible'><code>fn <a href='#method.lit_bool' class='fnname'>lit_bool</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.lit_integer' class='method'><span id='lit_integer.v' class='invisible'><code>fn <a href='#method.lit_integer' class='fnname'>lit_integer</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.literal' class='method'><span id='literal.v' class='invisible'><code>fn <a href='#method.literal' class='fnname'>literal</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.identifier' class='method'><span id='identifier.v' class='invisible'><code>fn <a href='#method.identifier' class='fnname'>identifier</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tok_plus' class='method'><span id='tok_plus.v' class='invisible'><code>fn <a href='#method.tok_plus' class='fnname'>tok_plus</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tok_minus' class='method'><span id='tok_minus.v' class='invisible'><code>fn <a href='#method.tok_minus' class='fnname'>tok_minus</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tok_ampersand' class='method'><span id='tok_ampersand.v' class='invisible'><code>fn <a href='#method.tok_ampersand' class='fnname'>tok_ampersand</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tok_percent' class='method'><span id='tok_percent.v' class='invisible'><code>fn <a href='#method.tok_percent' class='fnname'>tok_percent</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tok_pipe' class='method'><span id='tok_pipe.v' class='invisible'><code>fn <a href='#method.tok_pipe' class='fnname'>tok_pipe</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tok_caret' class='method'><span id='tok_caret.v' class='invisible'><code>fn <a href='#method.tok_caret' class='fnname'>tok_caret</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tok_star' class='method'><span id='tok_star.v' class='invisible'><code>fn <a href='#method.tok_star' class='fnname'>tok_star</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tok_slash_forward' class='method'><span id='tok_slash_forward.v' class='invisible'><code>fn <a href='#method.tok_slash_forward' class='fnname'>tok_slash_forward</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tok_paren_open' class='method'><span id='tok_paren_open.v' class='invisible'><code>fn <a href='#method.tok_paren_open' class='fnname'>tok_paren_open</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tok_paren_close' class='method'><span id='tok_paren_close.v' class='invisible'><code>fn <a href='#method.tok_paren_close' class='fnname'>tok_paren_close</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tok_comma' class='method'><span id='tok_comma.v' class='invisible'><code>fn <a href='#method.tok_comma' class='fnname'>tok_comma</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tok_eq' class='method'><span id='tok_eq.v' class='invisible'><code>fn <a href='#method.tok_eq' class='fnname'>tok_eq</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tok_bang' class='method'><span id='tok_bang.v' class='invisible'><code>fn <a href='#method.tok_bang' class='fnname'>tok_bang</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tok_angle_open' class='method'><span id='tok_angle_open.v' class='invisible'><code>fn <a href='#method.tok_angle_open' class='fnname'>tok_angle_open</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.tok_angle_close' class='method'><span id='tok_angle_close.v' class='invisible'><code>fn <a href='#method.tok_angle_close' class='fnname'>tok_angle_close</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.op_cmp' class='method'><span id='op_cmp.v' class='invisible'><code>fn <a href='#method.op_cmp' class='fnname'>op_cmp</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.op_cmp_eq' class='method'><span id='op_cmp_eq.v' class='invisible'><code>fn <a href='#method.op_cmp_eq' class='fnname'>op_cmp_eq</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.op_cmp_neq_bang' class='method'><span id='op_cmp_neq_bang.v' class='invisible'><code>fn <a href='#method.op_cmp_neq_bang' class='fnname'>op_cmp_neq_bang</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.op_cmp_lt' class='method'><span id='op_cmp_lt.v' class='invisible'><code>fn <a href='#method.op_cmp_lt' class='fnname'>op_cmp_lt</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.op_cmp_gt' class='method'><span id='op_cmp_gt.v' class='invisible'><code>fn <a href='#method.op_cmp_gt' class='fnname'>op_cmp_gt</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.op_cmp_lt_eq' class='method'><span id='op_cmp_lt_eq.v' class='invisible'><code>fn <a href='#method.op_cmp_lt_eq' class='fnname'>op_cmp_lt_eq</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.op_cmp_gt_eq' class='method'><span id='op_cmp_gt_eq.v' class='invisible'><code>fn <a href='#method.op_cmp_gt_eq' class='fnname'>op_cmp_gt_eq</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.kw_select' class='method'><span id='kw_select.v' class='invisible'><code>fn <a href='#method.kw_select' class='fnname'>kw_select</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.kw_top' class='method'><span id='kw_top.v' class='invisible'><code>fn <a href='#method.kw_top' class='fnname'>kw_top</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.kw_from' class='method'><span id='kw_from.v' class='invisible'><code>fn <a href='#method.kw_from' class='fnname'>kw_from</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.kw_where' class='method'><span id='kw_where.v' class='invisible'><code>fn <a href='#method.kw_where' class='fnname'>kw_where</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.kw_percent' class='method'><span id='kw_percent.v' class='invisible'><code>fn <a href='#method.kw_percent' class='fnname'>kw_percent</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.kw_with_ties' class='method'><span id='kw_with_ties.v' class='invisible'><code>fn <a href='#method.kw_with_ties' class='fnname'>kw_with_ties</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.kw_create_table' class='method'><span id='kw_create_table.v' class='invisible'><code>fn <a href='#method.kw_create_table' class='fnname'>kw_create_table</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.kw_or' class='method'><span id='kw_or.v' class='invisible'><code>fn <a href='#method.kw_or' class='fnname'>kw_or</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.kw_and' class='method'><span id='kw_and.v' class='invisible'><code>fn <a href='#method.kw_and' class='fnname'>kw_and</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.kw_not' class='method'><span id='kw_not.v' class='invisible'><code>fn <a href='#method.kw_not' class='fnname'>kw_not</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.pred_cmp' class='method'><span id='pred_cmp.v' class='invisible'><code>fn <a href='#method.pred_cmp' class='fnname'>pred_cmp</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.clause_where' class='method'><span id='clause_where.v' class='invisible'><code>fn <a href='#method.clause_where' class='fnname'>clause_where</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.column_name_list' class='method'><span id='column_name_list.v' class='invisible'><code>fn <a href='#method.column_name_list' class='fnname'>column_name_list</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.whitespace' class='method'><span id='whitespace.v' class='invisible'><code>fn <a href='#method.whitespace' class='fnname'>whitespace</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<h4 id='method.try' class='method'><span id='try.v' class='invisible'><code>fn <a href='#method.try' class='fnname'>try</a>&lt;F&gt;(&amp;mut self, revert: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>, rule: F) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>(&amp;mut Self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></span></code></span></h4>
+<h4 id='method.prec_climb' class='method'><span id='prec_climb.v' class='invisible'><code>fn <a href='#method.prec_climb' class='fnname'>prec_climb</a>&lt;F, G&gt;(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pos: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; left: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; min_prec: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; last_op: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../tsqlust/enum.Rule.html' title='tsqlust::Rule'>Rule</a>&gt;, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; primary: &amp;mut F,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; climb: &amp;mut G)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../tsqlust/enum.Rule.html' title='tsqlust::Rule'>Rule</a>&gt;, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;, <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a> <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;mut Self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;G: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;mut Self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../tsqlust/enum.Rule.html' title='tsqlust::Rule'>Rule</a>&gt;, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;</span></code></span></h4>
+<h4 id='method.parse_stmt_top' class='method'><span id='parse_stmt_top.v' class='invisible'><code>fn <a href='#method.parse_stmt_top' class='fnname'>parse_stmt_top</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../tsqlust/ast/struct.Node.html' title='tsqlust::ast::Node'>Node</a>&lt;<a class='struct' href='../tsqlust/ast/struct.TopStatement.html' title='tsqlust::ast::TopStatement'>TopStatement</a>&gt;&gt;</code></span></h4>
+<h4 id='method.parse_stmt_create_table' class='method'><span id='parse_stmt_create_table.v' class='invisible'><code>fn <a href='#method.parse_stmt_create_table' class='fnname'>parse_stmt_create_table</a>(&amp;self) -&gt; <a class='struct' href='../tsqlust/ast/struct.Node.html' title='tsqlust::ast::Node'>Node</a>&lt;<a class='struct' href='../tsqlust/ast/struct.CreateTableStatement.html' title='tsqlust::ast::CreateTableStatement'>CreateTableStatement</a>&gt;</code></span></h4>
+<h4 id='method.parse_identifier' class='method'><span id='parse_identifier.v' class='invisible'><code>fn <a href='#method.parse_identifier' class='fnname'>parse_identifier</a>(&amp;self) -&gt; <a class='struct' href='../tsqlust/ast/struct.Node.html' title='tsqlust::ast::Node'>Node</a>&lt;<a class='struct' href='../tsqlust/ast/struct.Identifier.html' title='tsqlust::ast::Identifier'>Identifier</a>&gt;</code></span></h4>
+<h4 id='method.parse_column_name_list' class='method'><span id='parse_column_name_list.v' class='invisible'><code>fn <a href='#method.parse_column_name_list' class='fnname'>parse_column_name_list</a>(&amp;self) -&gt; <a class='struct' href='../tsqlust/ast/struct.Node.html' title='tsqlust::ast::Node'>Node</a>&lt;<a class='struct' href='../tsqlust/ast/struct.ColumnNameList.html' title='tsqlust::ast::ColumnNameList'>ColumnNameList</a>&gt;</code></span></h4>
+<h4 id='method.parse_expression' class='method'><span id='parse_expression.v' class='invisible'><code>fn <a href='#method.parse_expression' class='fnname'>parse_expression</a>(&amp;self) -&gt; <a class='struct' href='../tsqlust/ast/struct.Node.html' title='tsqlust::ast::Node'>Node</a>&lt;<a class='enum' href='../tsqlust/ast/enum.Expression.html' title='tsqlust::ast::Expression'>Expression</a>&gt;</code></span></h4>
+<h4 id='method.parse_literal' class='method'><span id='parse_literal.v' class='invisible'><code>fn <a href='#method.parse_literal' class='fnname'>parse_literal</a>(&amp;self) -&gt; <a class='enum' href='../tsqlust/ast/enum.Literal.html' title='tsqlust::ast::Literal'>Literal</a></code></span></h4>
+<h4 id='method.parse_stmt_select' class='method'><span id='parse_stmt_select.v' class='invisible'><code>fn <a href='#method.parse_stmt_select' class='fnname'>parse_stmt_select</a>(&amp;self) -&gt; <a class='struct' href='../tsqlust/ast/struct.Node.html' title='tsqlust::ast::Node'>Node</a>&lt;<a class='struct' href='../tsqlust/ast/struct.SelectStatement.html' title='tsqlust::ast::SelectStatement'>SelectStatement</a>&gt;</code></span></h4>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'input, T:&nbsp;<a class='trait' href='../pest/input/trait.Input.html' title='pest::input::Input'>Input</a>&lt;'input&gt;&gt; <a class='trait' href='../pest/parser/trait.Parser.html' title='pest::parser::Parser'>Parser</a>&lt;'input, T&gt; for <a class='struct' href='../tsqlust/struct.Rdp.html' title='tsqlust::Rdp'>Rdp</a>&lt;T&gt;</code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Rule' class='type'><span id='Rule.t' class='invisible'><code>type <a href='../pest/parser/trait.Parser.html#associatedtype.Rule' class='type'>Rule</a> = <a class='enum' href='../tsqlust/enum.Rule.html' title='tsqlust::Rule'>Rule</a></code></span></h4>
+<h4 id='associatedtype.Token' class='type'><span id='Token.t' class='invisible'><code>type <a href='../pest/parser/trait.Parser.html#associatedtype.Token' class='type'>Token</a> = <a class='struct' href='../pest/parsers/token/struct.Token.html' title='pest::parsers::token::Token'>Token</a>&lt;<a class='enum' href='../tsqlust/enum.Rule.html' title='tsqlust::Rule'>Rule</a>&gt;</code></span></h4>
+<h4 id='method.input' class='method'><span id='input.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.input' class='fnname'>input</a>(&amp;self) -&gt; &amp;T</code></span></h4>
+<h4 id='method.input_mut' class='method'><span id='input_mut.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.input_mut' class='fnname'>input_mut</a>(&amp;mut self) -&gt; &amp;mut T</code></span></h4>
+<h4 id='method.end' class='method'><span id='end.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.end' class='fnname'>end</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>Returns whether a <code>Parser</code> has reached its end.</p>
+</div><h4 id='method.eoi_matched' class='method'><span id='eoi_matched.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.eoi_matched' class='fnname'>eoi_matched</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>Returns whether a <code>Parser</code> has matched end-of-input.</p>
+</div><h4 id='method.reset' class='method'><span id='reset.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.reset' class='fnname'>reset</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>Reset a <code>Parser</code>.</p>
+</div><h4 id='method.queue' class='method'><span id='queue.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.queue' class='fnname'>queue</a>(&amp;self) -&gt; &amp;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../pest/parsers/token/struct.Token.html' title='pest::parsers::token::Token'>Token</a>&lt;<a class='enum' href='../tsqlust/enum.Rule.html' title='tsqlust::Rule'>Rule</a>&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Returns the queue of all matched <code>Token</code>s.</p>
+</div><h4 id='method.queue_mut' class='method'><span id='queue_mut.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.queue_mut' class='fnname'>queue_mut</a>(&amp;mut self) -&gt; &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../pest/parsers/token/struct.Token.html' title='pest::parsers::token::Token'>Token</a>&lt;<a class='enum' href='../tsqlust/enum.Rule.html' title='tsqlust::Rule'>Rule</a>&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Returns the mutable queue of all matched <code>Token</code>s.</p>
+</div><h4 id='method.queue_with_captures' class='method'><span id='queue_with_captures.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.queue_with_captures' class='fnname'>queue_with_captures</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='struct' href='../pest/parsers/token/struct.Token.html' title='pest::parsers::token::Token'>Token</a>&lt;<a class='enum' href='../tsqlust/enum.Rule.html' title='tsqlust::Rule'>Rule</a>&gt;, <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;</code></span></h4>
+<div class='docblock'><p>Returns the queue of all matched <code>(Token, value)</code>s.</p>
+</div><h4 id='method.queue_index' class='method'><span id='queue_index.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.queue_index' class='fnname'>queue_index</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h4>
+<div class='docblock'><p>Returns the current index within the queue. Used in <code>process!</code>.</p>
+</div><h4 id='method.inc_queue_index' class='method'><span id='inc_queue_index.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.inc_queue_index' class='fnname'>inc_queue_index</a>(&amp;self)</code></span></h4>
+<div class='docblock'><p>Increments the current index within the queue. Used in <code>process!</code>.</p>
+</div><h4 id='method.set_queue_index' class='method'><span id='set_queue_index.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.set_queue_index' class='fnname'>set_queue_index</a>(&amp;self, index: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</code></span></h4>
+<div class='docblock'><p>Set the current index within the queue. Used in <code>process!</code>.</p>
+</div><h4 id='method.skip' class='method'><span id='skip.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.skip' class='fnname'>skip</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>Skips whitespace and comments.</p>
+</div><h4 id='method.is_atomic' class='method'><span id='is_atomic.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.is_atomic' class='fnname'>is_atomic</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>Returns whether a <code>Parser</code> is currently inside an atomic rule.</p>
+</div><h4 id='method.set_atomic' class='method'><span id='set_atomic.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.set_atomic' class='fnname'>set_atomic</a>(&amp;mut self, value: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></span></h4>
+<div class='docblock'><p>Sets a <code>Parser</code> to atomic rule mode, barring comment &amp; white-space skipping.</p>
+</div><h4 id='method.track' class='method'><span id='track.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.track' class='fnname'>track</a>(&amp;mut self, failed: <a class='enum' href='../tsqlust/enum.Rule.html' title='tsqlust::Rule'>Rule</a>, pos: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</code></span></h4>
+<div class='docblock'><p>Keeps track of rule failures. It gets called when a <code>Rule</code> fails at <code>pos</code>.</p>
+</div><h4 id='method.tracked_len_pos' class='method'><span id='tracked_len_pos.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.tracked_len_pos' class='fnname'>tracked_len_pos</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></span></h4>
+<div class='docblock'><p>Returns the length of the tracked <code>Rule</code>s.</p>
+</div><h4 id='method.expected' class='method'><span id='expected.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.expected' class='fnname'>expected</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='enum' href='../tsqlust/enum.Rule.html' title='tsqlust::Rule'>Rule</a>&gt;, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></span></h4>
+<div class='docblock'><p>Retuns a <code>Vec</code> of all expected <code>Rule</code>s at the deepest position where the parsing last stopped. It only returns leafs from the rule tree. Used for error reporting. <a href="../pest/parser/trait.Parser.html#tymethod.expected">Read more</a></p>
+</div><h4 id='method.stack' class='method'><span id='stack.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.stack' class='fnname'>stack</a>(&amp;self) -&gt; &amp;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></span></h4>
+<div class='docblock'><p>Returns the stack <code>Vec</code>.</p>
+</div><h4 id='method.stack_mut' class='method'><span id='stack_mut.v' class='invisible'><code>fn <a href='../pest/parser/trait.Parser.html#tymethod.stack_mut' class='fnname'>stack_mut</a>(&amp;mut self) -&gt; &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></span></h4>
+<div class='docblock'><p>Returns the mutable stack <code>Vec</code>.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "tsqlust";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

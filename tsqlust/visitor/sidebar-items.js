@@ -1,0 +1,1 @@
+initSidebarItems({"trait":[["Visitor","The trait that allows walking an AST."]]});

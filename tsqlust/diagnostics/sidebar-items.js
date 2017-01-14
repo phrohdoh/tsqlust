@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Context","Contains diagnostics recorded while walking an AST with a struct that implements `Visitor`."],["Diagnostic","Information recorded while walking an AST."]]});
