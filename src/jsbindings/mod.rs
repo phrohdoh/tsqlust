@@ -28,10 +28,10 @@ impl diagnostics::Diagnostic {
         let code = JsString::new(scope, &self.code).unwrap();
         let message = JsString::new(scope, &self.message).unwrap();
 
-        let _ = (*obj).set("pos_line", pos_line);
-        let _ = (*obj).set("pos_col", pos_col);
-        let _ = (*obj).set("code", code);
-        let _ = (*obj).set("message", message);
+        let _ = obj.set("pos_line", pos_line);
+        let _ = obj.set("pos_col", pos_col);
+        let _ = obj.set("code", code);
+        let _ = obj.set("message", message);
         obj
     }
 }
