@@ -4,7 +4,6 @@
 #![recursion_limit = "100"]
 
 #[cfg(feature = "jsbindings")]
-#[macro_use]
 extern crate neon;
 
 #[cfg(feature = "jsbindings")]

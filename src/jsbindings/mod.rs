@@ -1,10 +1,8 @@
-use visitor;
 use diagnostics;
-use ::{Rdp, StringInput};
 use ::get_diagnostics_for_tsql as lib_get_diagnostics;
 use visitors;
 
-use neon::js::{JsString, JsNumber, JsObject, Key};
+use neon::js::{JsString, JsNumber, JsObject, Object};
 use neon::vm::Call;
 use neon::mem::Handle;
 
@@ -25,14 +23,15 @@ impl diagnostics::Diagnostic {
         let scope = call.scope;
         let obj = JsObject::new(scope);
 
-        let pos_line = JsNumber::new(call.scope, self.pos.line as f64);
-        let pos_col = JsNumber::new(call.scope, self.pos.col as f64);
-        let code = JsString::new(call.scope, &self.code);
-        let message = JsString::new(call.scope, &self.message);
-        obj.set("pos_line", pos_line);
-        obj.set("pos_col", pos_col);
-        obj.set("code", code);
-        obj.set("message", message);
+        let pos_line = JsNumber::new(scope, self.pos.line as f64);
+        let pos_col = JsNumber::new(scope, self.pos.col as f64);
+        let code = JsString::new(scope, &self.code).unwrap();
+        let message = JsString::new(scope, &self.message).unwrap();
+
+        let _ = (*obj).set("pos_line", pos_line);
+        let _ = (*obj).set("pos_col", pos_col);
+        let _ = (*obj).set("code", code);
+        let _ = (*obj).set("message", message);
         obj
     }
 }
