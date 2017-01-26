@@ -4,8 +4,7 @@ use ::{Rdp, StringInput};
 use ::get_diagnostics_for_tsql as lib_get_diagnostics;
 use visitors;
 
-use neon;
-use neon::js::{JsString, Object};
+use neon::js::{JsString, JsNumber, JsObject, Key};
 use neon::vm::Call;
 use neon::mem::Handle;
 
@@ -22,11 +21,18 @@ pub fn get_diagnostics_for_tsql(call: Call) -> Vec<diagnostics::Diagnostic> {
 }
 
 impl diagnostics::Diagnostic {
-    pub fn to_jsobject(self, call: Call) -> neon::js::JsObject {
-        let mut obj = neon::js::JsObject::new(call.scope);
-        obj.set("pos", Handle::new(vec![self.pos.line, self.pos.col]));
-        obj.set("code", self.code);
-        obj.set("message", self.message);
+    pub fn to_jsobject(self, call: Call) -> Handle<JsObject> {
+        let scope = call.scope;
+        let obj = JsObject::new(scope);
+
+        let pos_line = JsNumber::new(call.scope, self.pos.line as f64);
+        let pos_col = JsNumber::new(call.scope, self.pos.col as f64);
+        let code = JsString::new(call.scope, &self.code);
+        let message = JsString::new(call.scope, &self.message);
+        obj.set("pos_line", pos_line);
+        obj.set("pos_col", pos_col);
+        obj.set("code", code);
+        obj.set("message", message);
         obj
     }
 }
