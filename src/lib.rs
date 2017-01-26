@@ -3,6 +3,13 @@
 
 #![recursion_limit = "100"]
 
+#[cfg(feature = "jsbindings")]
+#[macro_use]
+extern crate neon;
+
+#[cfg(feature = "jsbindings")]
+pub mod jsbindings;
+
 #[macro_use]
 extern crate pest;
 
@@ -11,6 +18,7 @@ use pest::prelude::{Token, Input};
 
 pub mod ast;
 pub mod visitor;
+pub mod visitors;
 pub mod diagnostics;
 
 impl_rdp! {
@@ -384,12 +392,10 @@ mod tests {
 
         let found = parser.parse_column_name_list().tnode.identifiers;
 
-        let expected = vec![
-            Node {
-                pos: Position { line: 1, col: 1 },
-                tnode: Identifier { value: "*".into() },
-            }
-        ];
+        let expected = vec![Node {
+                                pos: Position { line: 1, col: 1 },
+                                tnode: Identifier { value: "*".into() },
+                            }];
 
         assert_eq!(found, expected);
     }
@@ -403,32 +409,30 @@ mod tests {
 
         let found = parser.parse_column_name_list().tnode.identifiers;
 
-        let expected = vec![
-            Node {
-                pos: Position { line: 1, col: 1 },
-                tnode: Identifier { value: "Id".into() },
-            },
-            Node {
-                pos: Position { line: 1, col: 4 },
-                tnode: Identifier { value: "SomeColumn".into() },
-            },
-            Node {
-                pos: Position { line: 2, col: 10 },
-                tnode: Identifier { value: "ColumnA".into() },
-            },
-            Node {
-                pos: Position { line: 2, col: 20 },
-                tnode: Identifier { value: "ColumnB".into() },
-            },
-            Node {
-                pos: Position { line: 3, col: 12 },
-                tnode: Identifier { value: "Foo".into() },
-            },
-            Node {
-                pos: Position { line: 3, col: 18 },
-                tnode: Identifier { value: "Qux".into() },
-            }
-        ];
+        let expected = vec![Node {
+                                pos: Position { line: 1, col: 1 },
+                                tnode: Identifier { value: "Id".into() },
+                            },
+                            Node {
+                                pos: Position { line: 1, col: 4 },
+                                tnode: Identifier { value: "SomeColumn".into() },
+                            },
+                            Node {
+                                pos: Position { line: 2, col: 10 },
+                                tnode: Identifier { value: "ColumnA".into() },
+                            },
+                            Node {
+                                pos: Position { line: 2, col: 20 },
+                                tnode: Identifier { value: "ColumnB".into() },
+                            },
+                            Node {
+                                pos: Position { line: 3, col: 12 },
+                                tnode: Identifier { value: "Foo".into() },
+                            },
+                            Node {
+                                pos: Position { line: 3, col: 18 },
+                                tnode: Identifier { value: "Qux".into() },
+                            }];
 
         assert_eq!(expected, found);
     }
@@ -449,21 +453,14 @@ mod tests {
         assert!(!top_node.is_legacy());
 
         let top_expr_node = top_node.expr.tnode;
-        assert_eq!(top_expr_node,
-                   Expression::Literal { lit: Literal::Int(10) });
+        assert_eq!(top_expr_node, Expression::Literal { lit: Literal::Int(10) });
 
         let column_idents = select_node.column_name_list.tnode.identifiers;
-        assert_eq!(column_idents, vec![
-            Node {
-                pos: Position {
-                    line: 1,
-                    col: 17,
-                },
-                tnode: Identifier {
-                    value: "*".into(),
-                }
-            }
-        ]);
+        assert_eq!(column_idents,
+                   vec![Node {
+                            pos: Position { line: 1, col: 17 },
+                            tnode: Identifier { value: "*".into() },
+                        }]);
     }
 
     #[test]
