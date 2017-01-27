@@ -20,7 +20,7 @@ pub fn convert_diagnostics_to_jsarray<'a>(diagnostics: Vec<diagnostics::Diagnost
     let arr = JsArray::new(call.scope, len);
 
     for (idx, diagnostic) in diagnostics.into_iter().enumerate() {
-        let item = convert_diagnostic_to_jsobject(diagnostic, call).unwrap_or_else(|_| panic!());
+        let item = convert_diagnostic_to_jsobject(diagnostic, call)?;
         arr.set(idx as u32, item)?;
     }
 
