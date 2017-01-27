@@ -16,8 +16,7 @@ pub fn get_diagnostics_for_tsql<'a>(call: &'a mut Call) -> Handle<'a, JsArray> {
 
     let mut vis = visitors::SameLineTopStmtParens {};
     let diagnostics = lib_get_diagnostics(&tsql, &mut vis).expect("Failed to get diagnostics");
-    let js_arr = vec_diags_to_jsarray(diagnostics, call);
-    js_arr
+    vec_diags_to_jsarray(diagnostics, call)
 }
 
 fn vec_diags_to_jsarray<'a>(diagnostics: Vec<diagnostics::Diagnostic>,
