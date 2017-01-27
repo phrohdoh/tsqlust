@@ -3,15 +3,12 @@ use visitors;
 use ::get_diagnostics_for_tsql as lib_get_diagnostics;
 
 use neon::js::{JsString, JsNumber, JsObject, JsArray, Object};
-use neon::vm::Call;
-use neon::mem::Handle;
+use neon::vm::{Call, JsResult};
 
-pub fn get_diagnostics_for_tsql<'a>(call: &'a mut Call) -> Handle<'a, JsArray> {
+pub fn get_diagnostics_for_tsql<'a>(call: Call) -> JsResult<JsArray> {
     let tsql = call.arguments
-        .require(call.scope, 0)
-        .unwrap_or_else(|_| panic!())
-        .check::<JsString>()
-        .unwrap_or_else(|_| panic!())
+        .require(call.scope, 0)?
+        .check::<JsString>()?
         .value();
 
     let mut vis = visitors::SameLineTopStmtParens {};
@@ -20,8 +17,8 @@ pub fn get_diagnostics_for_tsql<'a>(call: &'a mut Call) -> Handle<'a, JsArray> {
 }
 
 fn vec_diags_to_jsarray<'a>(diagnostics: Vec<diagnostics::Diagnostic>,
-                            call: &'a mut Call)
-                            -> Handle<'a, JsArray> {
+                            call: Call)
+                            -> JsResult<JsArray> {
     let len = diagnostics.len() as u32;
     let arr = JsArray::new(call.scope, len);
 
@@ -33,12 +30,12 @@ fn vec_diags_to_jsarray<'a>(diagnostics: Vec<diagnostics::Diagnostic>,
         let code = JsString::new(call.scope, &diag.code).unwrap();
         let message = JsString::new(call.scope, &diag.message).unwrap();
 
-        let _ = obj.set("pos_line", pos_line);
-        let _ = obj.set("pos_col", pos_col);
-        let _ = obj.set("code", code);
-        let _ = obj.set("message", message);
-        let _ = arr.set(idx as u32, obj);
+        obj.set("pos_line", pos_line)?;
+        obj.set("pos_col", pos_col)?;
+        obj.set("code", code)?;
+        obj.set("message", message)?;
+        arr.set(idx as u32, obj)?;
     }
 
-    arr
+    Ok(arr)
 }
