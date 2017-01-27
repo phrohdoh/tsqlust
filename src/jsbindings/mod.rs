@@ -27,19 +27,32 @@ pub fn convert_diagnostics_to_jsarray<'a>(diagnostics: Vec<diagnostics::Diagnost
     Ok(arr)
 }
 
+/// Consumes a diagnostics::Diagnostic to convert it into a JsObject structured like so:
+///
+/// {
+///     "code": String,
+///     "message": String,
+///     "pos": {
+///         "line": Number,
+///         "col": Number,
+///     },
+/// }
 pub fn convert_diagnostic_to_jsobject<'a>(diagnostic: diagnostics::Diagnostic,
                                           call: &'a mut Call)
                                           -> JsResult<'a, JsObject> {
-    let obj = JsObject::new(call.scope);
+    let jsdiag = JsObject::new(call.scope);
+    let jspos = JsObject::new(call.scope);
 
     let pos_line = JsNumber::new(call.scope, diagnostic.pos.line as f64);
     let pos_col = JsNumber::new(call.scope, diagnostic.pos.col as f64);
+    jspos.set("line", pos_line)?;
+    jspos.set("col", pos_col)?;
+    jsdiag.set("pos", jspos)?;
+
     let code = JsString::new(call.scope, &diagnostic.code).unwrap();
     let message = JsString::new(call.scope, &diagnostic.message).unwrap();
+    jsdiag.set("code", code)?;
+    jsdiag.set("message", message)?;
 
-    obj.set("pos_line", pos_line)?;
-    obj.set("pos_col", pos_col)?;
-    obj.set("code", code)?;
-    obj.set("message", message)?;
-    Ok(obj)
+    Ok(jsdiag)
 }
