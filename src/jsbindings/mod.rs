@@ -13,6 +13,11 @@ pub fn get_diagnostics_for_tsql<'a>(call: &'a mut Call) -> JsResult<'a, JsArray>
     convert_diagnostics_to_jsarray(diagnostics, call)
 }
 
+register_module!(m, {
+    m.export("get_diagnostics_for_tsql", get_diagnostics_for_tsql)?;
+    Ok(())
+});
+
 pub fn convert_diagnostics_to_jsarray<'a>(diagnostics: Vec<diagnostics::Diagnostic>,
                                           call: &'a mut Call)
                                           -> JsResult<'a, JsArray> {

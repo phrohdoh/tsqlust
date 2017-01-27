@@ -11,7 +11,7 @@ keywords = ["tsql", "sql", "static analysis"]
 
 [dependencies]
 pest = "0.4.0"
-neon = { version = "0.1", optional = true }
+neon = { git = "https://github.com/neon-bindings/neon.git", branch = "master", optional = true }
 
 [features]
 jsbindings = ["neon"]
