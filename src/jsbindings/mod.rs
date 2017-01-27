@@ -5,18 +5,15 @@ use ::get_diagnostics_for_tsql as lib_get_diagnostics;
 use neon::js::{JsString, JsNumber, JsObject, JsArray, Object};
 use neon::vm::{Call, JsResult};
 
-pub fn get_diagnostics_for_tsql<'a>(call: Call) -> JsResult<JsArray> {
-    let tsql = call.arguments
-        .require(call.scope, 0)?
-        .check::<JsString>()?
-        .value();
+pub fn get_diagnostics_for_tsql(call: Call) -> JsResult<JsArray> {
+    let tsql = call.arguments.require(call.scope, 0)?.check::<JsString>()?.value();
 
     let mut vis = visitors::SameLineTopStmtParens {};
     let diagnostics = lib_get_diagnostics(&tsql, &mut vis).expect("Failed to get diagnostics");
     vec_diags_to_jsarray(diagnostics, call)
 }
 
-fn vec_diags_to_jsarray<'a>(diagnostics: Vec<diagnostics::Diagnostic>,
+pub fn vec_diags_to_jsarray(diagnostics: Vec<diagnostics::Diagnostic>,
                             call: Call)
                             -> JsResult<JsArray> {
     let len = diagnostics.len() as u32;
